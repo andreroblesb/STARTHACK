@@ -305,16 +305,7 @@
 
   $(document).ready(function () {
     initializeGrid();
-    recalculateTotalFee();
   });
-
-  // Update the sidebar fee display
-  function updateSidebarFeeDisplay() {
-    const feeElement = document.getElementById("widget-fee-display");
-    if (feeElement) {
-      feeElement.textContent = window.widget_fee.toFixed(2) + " CHF/monthly";
-    }
-  }
 
   // Initialize GridStack and add widgets
   console.log("Widget registry loaded:", window.widgetRegistry);
@@ -393,14 +384,16 @@
           })
           .then(response => response.json())
           .then(data => {
-              if (data.success) {
+                if (data.success) {
                   console.log(`Widget ${widget.sourceId} activated successfully`);
                   window.widgetRegistry[widget.sourceId].added = true;
                   // Update the UI to reflect the change
                   updateWidgetStatus(widget.sourceId, true);
-                  // Recalculate fees
-                  recalculateTotalFee();
-              } else {
+                      // Check if page has already been reloaded
+                  if (!sessionStorage.getItem("widgetReloaded")) {
+                      sessionStorage.setItem("widgetReloaded", "true");
+                      window.location.reload();
+                  }
                   console.error("Failed to activate widget:", data.error);
                   grid.removeWidget(grid.engine.nodes.find(n => n.id === widget.sourceId));
               }

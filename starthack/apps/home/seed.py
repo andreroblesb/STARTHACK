@@ -96,7 +96,7 @@ def create_widgets():
             'active': True,  # Changed from active_by_default to active
             'position_x': 8,
             'position_y': 10,
-            'width': 4,
+            'width': 8,
             'height': 5
         }
     ]

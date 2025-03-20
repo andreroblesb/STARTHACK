@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <!-- This site was created in Webflow. https://webflow.com -->
 <!-- Last Published: Mon Mar 10 2025 14:29:32 GMT+0000 (Coordinated Universal Time) -->
-<html data-wf-domain="www.deductive.ai" data-wf-locale="en" data-wf-page="6719011d01dcab5f952b4610" data-wf-site="66e7cf7e589ead8e06f45979" lang="en">
+<html data-wf-domain="" data-wf-locale="en" data-wf-page="6719011d01dcab5f952b4610" data-wf-site="66e7cf7e589ead8e06f45979" lang="en">
  <head>
   <meta charset="utf-8"/>
   <title>
@@ -52,6 +52,43 @@
       <nav class="navbar">
        <div class="global-styles w-embed">
         <style>
+    .photo-gallery {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px;
+    }
+
+    .photo-item {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      width: 200px;
+      text-align: center;
+    }
+
+    .photo-item img {
+      width: 100%;
+      height: 50%;
+      border-bottom: 2px solid #ddd;
+    }
+
+    .photo-item h3 {
+      font-size: 1.2em;
+      margin: 10px 0;
+      color: #333;
+    }
+
+    .photo-item p {
+      font-size: 0.9em;
+      margin-bottom: 20px;
+      color: #777;
+    }
+
+    .photo-item:hover {
+      transform: scale(1.05);
+      transition: transform 0.3s ease;
+    }
          /* Ensure all elements inherit the color from its parent */
 body * {
     color: inherit;
@@ -288,10 +325,10 @@ margin: 0rem !important;
        <div class="navbar_overlay" navbar-overlay="">
         <div class="nav-line">
         </div>
-       </div>
+       </div> 
        <div class="navbar_container">
-        <a aria-current="page" class="navbar_logo w-inline-block w--current" href="/">
-         <img alt="" loading="lazy" src='{% static "images/67c9bffc2da249a85dd0e3b2_Logo%20Dark%20BG.svg" %}'/>
+        <a aria-current="page" class="navbar_logo" href="/">
+         {% comment %} <img alt="" loading="lazy" src='{% static "images/logogo.png" %}'/> {% endcomment %}
         </a>
         <div class="nav_menu">
          <div class="nav_links-wrapper">
@@ -367,7 +404,7 @@ margin: 0rem !important;
           </div>
           <div class="max-width-small">
            <p class="home_hero_para text-size-large">
-            Belisense transforms your root-causing process by effortlessly understanding your entire Belimo's device system - 
+            Bellisense transforms your root-causing process by effortlessly understanding your entire Belimo's device system - 
             <span class="text-color-green-lighter">
              A widget-based application to approach data in a way that just makes sense.
             </span>
@@ -402,13 +439,15 @@ margin: 0rem !important;
           </div>
          </div>
          <div class="home_hero_video_wrapper">
+          <div class="containervid">
           <img alt="Hero Video Thumbnail" class="hero_video_thumbnail" loading="lazy" sizes="(max-width: 1878px) 100vw, 1878px" src='{% static "images/66fa6811cd2d8ca315831ff3_hero-thumbnail.webp" %}' srcset="images/66fa6811cd2d8ca315831ff3_hero-thumbnail-p-500.webp 500w, images/66fa6811cd2d8ca315831ff3_hero-thumbnail-p-800.webp 800w, images/66fa6811cd2d8ca315831ff3_hero-thumbnail-p-1080.webp 1080w, images/66fa6811cd2d8ca315831ff3_hero-thumbnail-p-1600.webp 1600w, images/66fa6811cd2d8ca315831ff3_hero-thumbnail.webp 1878w"/>
-          <div class="home_hero-video-v2 w-background-video w-background-video-atom" data-autoplay="true" data-loop="true" data-poster-url="https://cdn.prod.website-files.com/66e7cf7e589ead8e06f45979%2F671902bc6a2ca64bcf1e8353_hero-animation-v2-poster-00001.jpg" data-video-urls="https://cdn.prod.website-files.com/66e7cf7e589ead8e06f45979%2F671902bc6a2ca64bcf1e8353_hero-animation-v2-transcode.mp4,https://cdn.prod.website-files.com/66e7cf7e589ead8e06f45979%2F671902bc6a2ca64bcf1e8353_hero-animation-v2-transcode.webm" data-wf-ignore="true">
-           <video 66e7cf7e589ead8e06f45979%2f671902bc6a2ca64bcf1e8353_hero-animation-v2-poster-00001.jpg")"="" autoplay="" cdn.prod.website-files.com="" data-object-fit="cover" data-wf-ignore="true" https:="" id="0b377597-2566-da4d-3ca4-97629b8a6363-video" loop="" muted="" playsinline="" style="background-image:url(">
+          <div class="home_hero-video-v2 w-background-video w-background-video-atom" data-autoplay="true" data-loop="true" data-poster-url="https://media.istockphoto.com/id/1771168399/video/mechanism-and-gears-of-an-old-pocket-watch-macro-close-up-shot-camera-moves-left-to-orbit.mp4?s=mp4-640x640-is&k=20&c=c05SfinBQ7HVbA_XdUprZvsqvK2Rf5BvHmeN3DgKAJc=" data-wf-ignore="true">
+           <video src='{% static "images/soravideo.mp4" %}' autoplay="true" cdn.prod.website-files.com="" data-object-fit="cover" data-wf-ignore="true" https:="" id="0b377597-2566-da4d-3ca4-97629b8a6363-video" loop="" muted="" playsinline="" style="background-image:url(">
             <source data-wf-ignore="true" src="media/66e7cf7e589ead8e06f45979%252F671902bc6a2ca64bcf1e8353_hero-animation-v2-transcode.mp4"/>
             <source data-wf-ignore="true" src="media/66e7cf7e589ead8e06f45979%252F671902bc6a2ca64bcf1e8353_hero-animation-v2-transcode.webm"/>
            </video>
           </div>
+        </div>
          </div>
         </div>
        </div>
@@ -501,7 +540,7 @@ margin: 0rem !important;
         <div class="home_intro_content">
          <div class="intro_highlight text-size-large">
           <span class="text-weight-semibold">
-           Introducing Belisense
+           Introducing Bellisense
           </span>
          </div>
          <div class="padding-bottom padding-xxsmall">
@@ -520,18 +559,6 @@ margin: 0rem !important;
          </div>
          <div class="padding-bottom padding-small">
          </div>
-         <p class="home_intro_para text-size-large">
-          Deductive AI integrates with your codebase and observability tools, creating a unified knowledge graph powered by a code-aware reasoning engine to diagnose root causes like an expert engineer
-         </p>
-        </div>
-        <div class="home_intro_video-wrapper">
-         <img alt="Deductive AI Knowledge Graph" class="home_intro-image" loading="eager" sizes="(max-width: 1647px) 100vw, 1647px" src='{% static "images/66f0fc1d12fe2c1ba513f0f9_introduction.webp" %}' srcset="images/66f0fc1d12fe2c1ba513f0f9_introduction-p-500.png 500w, images/66f0fc1d12fe2c1ba513f0f9_introduction-p-800.png 800w, images/66f0fc1d12fe2c1ba513f0f9_introduction-p-1080.png 1080w, images/66f0fc1d12fe2c1ba513f0f9_introduction.webp 1647w"/>
-         <div class="home_hero_intro-video-v2 is-wo-bg w-background-video w-background-video-atom" data-autoplay="true" data-loop="true" data-poster-url="https://cdn.prod.website-files.com/66e7cf7e589ead8e06f45979%2F6719035d803b9bd37a583e17_system-architecture-animation-poster-00001.jpg" data-video-urls="https://cdn.prod.website-files.com/66e7cf7e589ead8e06f45979%2F6719035d803b9bd37a583e17_system-architecture-animation-transcode.mp4,https://cdn.prod.website-files.com/66e7cf7e589ead8e06f45979%2F6719035d803b9bd37a583e17_system-architecture-animation-transcode.webm" data-wf-ignore="true">
-          <video 66e7cf7e589ead8e06f45979%2f6719035d803b9bd37a583e17_system-architecture-animation-poster-00001.jpg")"="" autoplay="" cdn.prod.website-files.com="" data-object-fit="cover" data-wf-ignore="true" https:="" id="9b82414c-631c-c48e-1cf1-7530ab57a2f7-video" loop="" muted="" playsinline="" style="background-image:url(">
-           <source data-wf-ignore="true" src="media/66e7cf7e589ead8e06f45979%252F6719035d803b9bd37a583e17_system-architecture-animation-transcode.mp4"/>
-           <source data-wf-ignore="true" src="media/66e7cf7e589ead8e06f45979%252F6719035d803b9bd37a583e17_system-architecture-animation-transcode.webm"/>
-          </video>
-         </div>
         </div>
        </div>
       </div>
@@ -547,831 +574,31 @@ margin: 0rem !important;
       </div>
      </div>
     </section>
-    <div class="relative">
-     <div class="line_component is-bottom">
-      <div class="line-wrapper">
-       <div class="rhombus-svg top-left">
-        <img alt="" class="svg" loading="lazy" src='{% static "images/66ea46977cd3331beccbc39c_rhombus.svg" %}'/>
-       </div>
-       <div class="rhombus-svg top-right">
-        <img alt="" class="svg" loading="lazy" src='{% static "images/66ea46977cd3331beccbc39c_rhombus.svg" %}'/>
-       </div>
+    <section class="photo-gallery">
+      <div class="photo-item">
+        <img src='{% static "images/nicocoloco.png" %}' alt="Person 1">
+        <h3>Nicolás Sierra Beltrán</h3>
+        <p>Professional Coffee Taster</p>
       </div>
-     </div>
-    </div>
-    <section class="section_layout_change">
-     <div class="container-large">
-      <div class="layout_change_wrapper">
-       <div class="layout_change_block">
-        <div class="sticky_progress_wrapper">
-         <div class="sticky_progress">
-          <div class="sticky_progress_scroller layout-active" progress="">
-          </div>
-          <div class="sticky_progress_scroller" progress="">
-          </div>
-          <div class="sticky_progress_scroller" progress="">
-          </div>
-         </div>
-        </div>
-        <div class="layout_bg_abs">
-         <div class="layout_bg_sticky">
-          <div class="layout_bg">
-          </div>
-          <div class="layout_bg">
-          </div>
-         </div>
-        </div>
-        <div class="change_block_sticky">
-         <div change-block-image="" class="layout_change_block_image layout-active" id="w-node-_486ead6b-2537-ff95-218b-ce9553bd5a17-952b4610">
-          <div class="layout_change_left_top">
-           <div class="home_horizontal_top_text text-size-large">
-            <span class="text-color-green">
-             Find the Needle in the Haystack
-            </span>
-           </div>
-           <h2 class="home_horizontal_top_title heading-style-h3">
-            <span class="text-color-white">
-             Search
-            </span>
-           </h2>
-          </div>
-          <div class="layout_change_video-wrapper">
-           <img alt="Search" class="layout_change_image is-active" loading="eager" sizes="(max-width: 1220px) 100vw, 1220px" src='{% static "images/66edd1be887dfe49c6c05a87_Search.webp" %}' srcset="images/66edd1be887dfe49c6c05a87_Search-p-500.webp 500w, images/66edd1be887dfe49c6c05a87_Search-p-800.webp 800w, images/66edd1be887dfe49c6c05a87_Search-p-1080.webp 1080w, images/66edd1be887dfe49c6c05a87_Search.webp 1220w"/>
-           <div class="layout_change-video w-embed" feature-video="">
-            <div class="w-background-video w-background-video-atom" style="width: 100%; height: 100%;">
-             <video autoplay="" data-object-fit="cover" data-wf-ignore="true" loop="" muted="" playsinline="">
-              <source data-wf-ignore="true" src="media/search-animation.mp4"/>
-             </video>
-            </div>
-           </div>
-          </div>
-          <div class="display-mobile-landscape">
-           <div change-block-content="" class="change_block_content layout-active" video-trigger="">
-            <div class="home_horizontal_right_item">
-             <div class="home_horizontal_item_icon">
-              <img alt="Zap" loading="lazy" src='{% static "images/66f2852110cde2247db48a0f_zap-40.svg" %}'/>
-             </div>
-             <div class="padding-bottom padding-small">
-             </div>
-             <h3 class="home_horizontal_item_title text-size-xlarge text-color-white">
-              <span class="text-color-white">
-               Blazing Fast Queries
-              </span>
-             </h3>
-             <div class="padding-bottom padding-xxsmall">
-             </div>
-             <p class="home_horizontal_item_para text-size-medium">
-              Queries petabytes of logs and millions of timeseries in seconds with AI-powered contextual filtering
-             </p>
-            </div>
-            <div class="home_horizontal_right_item">
-             <div class="home_horizontal_item_icon">
-              <img alt="" loading="lazy" src='{% static "images/66edd30f9a99820d0088ec39_Graph.svg" %}'/>
-             </div>
-             <div class="padding-bottom padding-small">
-             </div>
-             <h3 class="home_horizontal_item_title text-size-xlarge text-color-white">
-              Knowledge Graph
-             </h3>
-             <div class="padding-bottom padding-xxsmall">
-             </div>
-             <p class="home_horizontal_item_para text-size-medium">
-              Connects telemetry with your codebase in a unified dynamic graph that stays up-to-date and highly accurate
-             </p>
-            </div>
-            <div class="home_horizontal_right_item">
-             <div class="home_horizontal_item_icon">
-              <img alt="UniteSquare" loading="lazy" src='{% static "images/66f28565ef2cef8aed0349ff_UniteSquare.svg" %}'/>
-             </div>
-             <div class="padding-bottom padding-small">
-             </div>
-             <h3 class="home_horizontal_item_title text-size-xlarge text-color-white">
-              <span class="text-color-white">
-               Unified Context
-              </span>
-             </h3>
-             <div class="padding-bottom padding-xxsmall">
-             </div>
-             <p class="home_horizontal_item_para text-size-medium">
-              Automatically discovers the most relevant artifacts, observations, and insights in the investigation context
-             </p>
-            </div>
-           </div>
-          </div>
-         </div>
-         <div change-block-image="" class="layout_change_block_image" id="w-node-ba1bd660-99d8-9807-f308-58a7c9b47e02-952b4610">
-          <div class="layout_change_left_top">
-           <div class="home_horizontal_top_text text-size-large">
-            <span class="text-color-green">
-             Connect the Dots
-            </span>
-           </div>
-           <h2 class="home_horizontal_top_title heading-style-h3">
-            <span class="text-color-white">
-             Reasoning &amp;  Analysis
-            </span>
-           </h2>
-          </div>
-          <div class="layout_change_video-wrapper">
-           <img alt="Search" class="layout_change_image is-active" loading="eager" sizes="(max-width: 1220px) 100vw, 1220px" src='{% static "images/66edd1be887dfe49c6c05a87_Search.webp" %}' srcset="images/66edd1be887dfe49c6c05a87_Search-p-500.webp 500w, images/66edd1be887dfe49c6c05a87_Search-p-800.webp 800w, images/66edd1be887dfe49c6c05a87_Search-p-1080.webp 1080w, images/66edd1be887dfe49c6c05a87_Search.webp 1220w"/>
-           <div class="layout_change-video w-embed" feature-video="">
-            <div class="w-background-video w-background-video-atom" style="width: 100%; height: 100%;">
-             <video autoplay="" data-object-fit="cover" data-wf-ignore="true" loop="" muted="" playsinline="">
-              <source data-wf-ignore="true" src="media/analyze-animation.mp4"/>
-             </video>
-            </div>
-           </div>
-          </div>
-          <div class="display-mobile-landscape">
-           <div change-block-content="" class="change_block_content" video-trigger="">
-            <div class="home_horizontal_right_item">
-             <div class="home_horizontal_item_icon">
-              <img alt="ListMagnifyingGlass" loading="lazy" src='{% static "images/66f285c41bf5ddab64443c61_ListMagnifyingGlass.svg" %}'/>
-             </div>
-             <div class="padding-bottom padding-small">
-             </div>
-             <h3 class="home_horizontal_item_title text-size-xlarge text-color-white">
-              <span class="text-color-white">
-               Agentic Problem Solvers
-              </span>
-             </h3>
-             <div class="padding-bottom padding-xxsmall">
-             </div>
-             <p class="home_horizontal_item_para text-size-medium">
-              Purpose-built agents designed to plan multiple steps ahead, search for precise information, and intelligently reason about anomalies
-             </p>
-            </div>
-            <div class="home_horizontal_right_item">
-             <div class="home_horizontal_item_icon">
-              <img alt="" loading="lazy" src='{% static "images/66edd30fd0605f0f4a689aee_CodeBlock.svg" %}'/>
-             </div>
-             <div class="padding-bottom padding-small">
-             </div>
-             <h3 class="home_horizontal_item_title text-size-xlarge text-color-white">
-              <span class="text-color-white">
-               Code Aware Reasoning
-              </span>
-             </h3>
-             <div class="padding-bottom padding-xxsmall">
-             </div>
-             <p class="home_horizontal_item_para text-size-medium">
-              Pinpoints root causes with the precision of an experienced engineer, analyzing issues across millions of lines of code in seconds
-             </p>
-            </div>
-            <div class="home_horizontal_right_item">
-             <div class="home_horizontal_item_icon">
-              <img alt="" loading="lazy" src='{% static "images/66edd30f9130b216ecd3c708_Brain.svg" %}'/>
-             </div>
-             <div class="padding-bottom padding-small">
-             </div>
-             <h3 class="home_horizontal_item_title text-size-xlarge text-color-white">
-              <span class="text-color-white">
-               Intelligent Context
-              </span>
-             </h3>
-             <div class="padding-bottom padding-xxsmall">
-             </div>
-             <p class="home_horizontal_item_para text-size-medium">
-              Automatically discovers the most relevant artifacts, observations, and insights in the investigation context
-             </p>
-            </div>
-           </div>
-          </div>
-         </div>
-         <div change-block-image="" class="layout_change_block_image" id="w-node-_44247d26-b45a-1d62-19d0-1668a456dc5e-952b4610">
-          <div class="layout_change_left_top">
-           <div class="home_horizontal_top_text text-size-large">
-            <span class="text-color-green">
-             Get actionable insights
-            </span>
-           </div>
-           <h2 class="home_horizontal_top_title heading-style-h3">
-            <span class="text-color-white">
-             Recommendations
-            </span>
-           </h2>
-          </div>
-          <div class="layout_change_video-wrapper">
-           <img alt="Search" class="layout_change_image is-active" loading="eager" sizes="(max-width: 1220px) 100vw, 1220px" src='{% static "images/66edd1be887dfe49c6c05a87_Search.webp" %}' srcset="images/66edd1be887dfe49c6c05a87_Search-p-500.webp 500w, images/66edd1be887dfe49c6c05a87_Search-p-800.webp 800w, images/66edd1be887dfe49c6c05a87_Search-p-1080.webp 1080w, images/66edd1be887dfe49c6c05a87_Search.webp 1220w"/>
-           <div class="layout_change-video w-embed" feature-video="">
-            <div class="w-background-video w-background-video-atom" style="width: 100%; height: 100%;">
-             <video autoplay="" data-object-fit="cover" data-wf-ignore="true" loop="" muted="" playsinline="">
-              <source data-wf-ignore="true" src="media/recommendation-animation.mp4"/>
-             </video>
-            </div>
-           </div>
-          </div>
-          <div class="display-mobile-landscape">
-           <div change-block-content="" class="change_block_content" video-trigger="">
-            <div class="home_horizontal_right_item">
-             <div class="home_horizontal_item_icon">
-              <img alt="" loading="lazy" src='{% static "images/66edd310ed0c660058319954_NetworkX.svg" %}'/>
-             </div>
-             <div class="padding-bottom padding-small">
-             </div>
-             <h3 class="home_horizontal_item_title text-size-xlarge text-color-white">
-              Actionable Plan
-             </h3>
-             <div class="padding-bottom padding-xxsmall">
-             </div>
-             <p class="home_horizontal_item_para text-size-medium">
-              Deductive recommends an actionable plan at every step of the investigation
-             </p>
-            </div>
-            <div class="home_horizontal_right_item">
-             <div class="home_horizontal_item_icon">
-              <img alt="" loading="lazy" src='{% static "images/66f286b3ef2cef8aed045500_LineSegments.svg" %}'/>
-             </div>
-             <div class="padding-bottom padding-small">
-             </div>
-             <h3 class="home_horizontal_item_title text-size-xlarge text-color-white">
-              <span class="text-color-white">
-               Advanced Personalization
-              </span>
-             </h3>
-             <div class="padding-bottom padding-xxsmall">
-             </div>
-             <p class="home_horizontal_item_para text-size-medium">
-              Answers are personalized based on you and your teams prior usage
-             </p>
-            </div>
-            <div class="home_horizontal_right_item">
-             <div class="home_horizontal_item_icon">
-              <img alt="" loading="lazy" src='{% static "images/66f286b3114a26ed070af4f5_Repeat.svg" %}'/>
-             </div>
-             <div class="padding-bottom padding-small">
-             </div>
-             <h3 class="home_horizontal_item_title text-size-xlarge text-color-white">
-              <span class="text-color-white">
-               Feedback Loop
-              </span>
-             </h3>
-             <div class="padding-bottom padding-xxsmall">
-             </div>
-             <p class="home_horizontal_item_para text-size-medium">
-              Learns from both direct feedback and observed behavior for continuous improvements in accuracy
-             </p>
-            </div>
-           </div>
-          </div>
-         </div>
-        </div>
-        <div class="change_block_content_wrap">
-         <div change-block-content="true" class="change_block_content layout-active" video-trigger="desktop">
-          <div class="home_horizontal_right_item">
-           <div class="home_horizontal_item_icon">
-            <img alt="Zap" loading="lazy" src='{% static "images/66f2852110cde2247db48a0f_zap-40.svg" %}'/>
-           </div>
-           <div class="padding-bottom padding-small">
-           </div>
-           <h3 class="home_horizontal_item_title text-size-xlarge text-color-white">
-            <span class="text-color-white">
-             Blazing Fast Queries
-            </span>
-           </h3>
-           <div class="padding-bottom padding-xxsmall">
-           </div>
-           <p class="home_horizontal_item_para text-size-medium">
-            Queries petabytes of logs and millions of timeseries in seconds with AI-powered contextual filtering
-           </p>
-          </div>
-          <div class="home_horizontal_right_item">
-           <div class="home_horizontal_item_icon">
-            <img alt="" loading="lazy" src='{% static "images/66edd30f9a99820d0088ec39_Graph.svg" %}'/>
-           </div>
-           <div class="padding-bottom padding-small">
-           </div>
-           <h3 class="home_horizontal_item_title text-size-xlarge text-color-white">
-            Knowledge Graph
-           </h3>
-           <div class="padding-bottom padding-xxsmall">
-           </div>
-           <p class="home_horizontal_item_para text-size-medium">
-            Connects telemetry with your codebase in a unified dynamic graph that stays up-to-date and highly accurate
-           </p>
-          </div>
-          <div class="home_horizontal_right_item">
-           <div class="home_horizontal_item_icon">
-            <img alt="UniteSquare" loading="lazy" src='{% static "images/66f28565ef2cef8aed0349ff_UniteSquare.svg" %}'/>
-           </div>
-           <div class="padding-bottom padding-small">
-           </div>
-           <h3 class="home_horizontal_item_title text-size-xlarge text-color-white">
-            <span class="text-color-white">
-             Unified Context
-            </span>
-           </h3>
-           <div class="padding-bottom padding-xxsmall">
-           </div>
-           <p class="home_horizontal_item_para text-size-medium">
-            Automatically discovers the most relevant artifacts, observations, and insights in the investigation context
-           </p>
-          </div>
-         </div>
-         <div change-block-content="true" class="change_block_content" video-trigger="desktop">
-          <div class="home_horizontal_right_item">
-           <div class="home_horizontal_item_icon">
-            <img alt="ListMagnifyingGlass" loading="lazy" src='{% static "images/66f285c41bf5ddab64443c61_ListMagnifyingGlass.svg" %}'/>
-           </div>
-           <div class="padding-bottom padding-small">
-           </div>
-           <h3 class="home_horizontal_item_title text-size-xlarge text-color-white">
-            <span class="text-color-white">
-             Agentic Problem Solvers
-            </span>
-           </h3>
-           <div class="padding-bottom padding-xxsmall">
-           </div>
-           <p class="home_horizontal_item_para text-size-medium">
-            Purpose-built agents designed to plan multiple steps ahead, search for precise information, and intelligently reason about anomalies
-           </p>
-          </div>
-          <div class="home_horizontal_right_item">
-           <div class="home_horizontal_item_icon">
-            <img alt="" loading="lazy" src='{% static "images/66edd30fd0605f0f4a689aee_CodeBlock.svg" %}'/>
-           </div>
-           <div class="padding-bottom padding-small">
-           </div>
-           <h3 class="home_horizontal_item_title text-size-xlarge text-color-white">
-            <span class="text-color-white">
-             Code Aware Reasoning
-            </span>
-           </h3>
-           <div class="padding-bottom padding-xxsmall">
-           </div>
-           <p class="home_horizontal_item_para text-size-medium">
-            Pinpoints root causes with the precision of an experienced engineer, analyzing issues across millions of lines of code in seconds
-           </p>
-          </div>
-          <div class="home_horizontal_right_item">
-           <div class="home_horizontal_item_icon">
-            <img alt="" loading="lazy" src='{% static "images/66edd30f9130b216ecd3c708_Brain.svg" %}'/>
-           </div>
-           <div class="padding-bottom padding-small">
-           </div>
-           <h3 class="home_horizontal_item_title text-size-xlarge text-color-white">
-            <span class="text-color-white">
-             Intelligent Context
-            </span>
-           </h3>
-           <div class="padding-bottom padding-xxsmall">
-           </div>
-           <p class="home_horizontal_item_para text-size-medium">
-            Automatically discovers the most relevant artifacts, observations, and insights in the investigation context
-           </p>
-          </div>
-         </div>
-         <div change-block-content="true" class="change_block_content" video-trigger="desktop">
-          <div class="home_horizontal_right_item">
-           <div class="home_horizontal_item_icon">
-            <img alt="" loading="lazy" src='{% static "images/66edd310ed0c660058319954_NetworkX.svg" %}'/>
-           </div>
-           <div class="padding-bottom padding-small">
-           </div>
-           <h3 class="home_horizontal_item_title text-size-xlarge text-color-white">
-            Actionable Plan
-           </h3>
-           <div class="padding-bottom padding-xxsmall">
-           </div>
-           <p class="home_horizontal_item_para text-size-medium">
-            Deductive recommends an actionable plan at every step of the investigation
-           </p>
-          </div>
-          <div class="home_horizontal_right_item">
-           <div class="home_horizontal_item_icon">
-            <img alt="" loading="lazy" src='{% static "images/66f286b3ef2cef8aed045500_LineSegments.svg" %}'/>
-           </div>
-           <div class="padding-bottom padding-small">
-           </div>
-           <h3 class="home_horizontal_item_title text-size-xlarge text-color-white">
-            <span class="text-color-white">
-             Advanced Personalization
-            </span>
-           </h3>
-           <div class="padding-bottom padding-xxsmall">
-           </div>
-           <p class="home_horizontal_item_para text-size-medium">
-            Answers are personalized based on you and your teams prior usage
-           </p>
-          </div>
-          <div class="home_horizontal_right_item">
-           <div class="home_horizontal_item_icon">
-            <img alt="" loading="lazy" src='{% static "images/66f286b3114a26ed070af4f5_Repeat.svg" %}'/>
-           </div>
-           <div class="padding-bottom padding-small">
-           </div>
-           <h3 class="home_horizontal_item_title text-size-xlarge text-color-white">
-            <span class="text-color-white">
-             Feedback Loop
-            </span>
-           </h3>
-           <div class="padding-bottom padding-xxsmall">
-           </div>
-           <p class="home_horizontal_item_para text-size-medium">
-            Learns from both direct feedback and observed behavior for continuous improvements in accuracy
-           </p>
-          </div>
-         </div>
-        </div>
-       </div>
+    
+      <div class="photo-item">
+        <img src='{% static "images/andre.png" %}' alt="Person 2">
+        <h3>André Robles Bueckmann</h3>
+        <p>Ocassional Soccer Player</p>
       </div>
-     </div>
+    
+      <div class="photo-item">
+        <img src='{% static "images/richacha.png" %}' alt="Person 3">
+        <h3>Richa Tamhane</h3>
+        <p>Database Conoisseur</p>
+      </div>
+    
+      <div class="photo-item">
+        <img src='{% static "images/chenxixi.png" %}' alt="Person 4">
+        <h3>Chenxi Jia</h3>
+        <p>Hiding Apassionado</p>
+      </div>
     </section>
-
-    <div class="relative">
-     <div class="line_component is-bottom">
-      <div class="line-wrapper">
-       <div class="rhombus-svg top-left">
-        <img alt="" class="svg" loading="lazy" src='{% static "images/66ea46977cd3331beccbc39c_rhombus.svg" %}'/>
-       </div>
-       <div class="rhombus-svg top-right">
-        <img alt="" class="svg" loading="lazy" src='{% static "images/66ea46977cd3331beccbc39c_rhombus.svg" %}'/>
-       </div>
-      </div>
-     </div>
-    </div>
-    <section class="section_home_integrations">
-     <div class="padding-global padding-section-medium">
-      <div class="container-large">
-       <div class="home_integrations" home-integrations="">
-        <div class="hide w-embed">
-         <style>
-          .integration_grid_content .integration_grid_item {
-	opacity: 0;
-}
-
-.integration_grid_logo:hover .integration_grid_logo_bg {
-	background: var(--dark-green--light);
-}
-         </style>
-        </div>
-        <div class="integration_grid_block">
-         <div class="integration_grid" id="w-node-cfe6a4fb-55b8-ccdb-4156-8c63ba5aa217-952b4610">
-          <div class="integration_grid_item_title is-title">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item opacity-0">
-          </div>
-          <div class="integration_grid_item opacity-0">
-          </div>
-          <div class="integration_grid_item opacity-0">
-          </div>
-          <div class="integration_grid_item opacity-0">
-          </div>
-          <div class="integration_grid_item opacity-0">
-          </div>
-          <div class="integration_grid_item opacity-0">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item opacity-0">
-          </div>
-          <div class="integration_grid_item opacity-0">
-          </div>
-          <div class="integration_grid_item opacity-0">
-          </div>
-          <div class="integration_grid_item opacity-0">
-          </div>
-          <div class="integration_grid_item opacity-0">
-          </div>
-          <div class="integration_grid_item opacity-0">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_logo is-flip is-1">
-           <div class="integration_grid_logo_bg">
-           </div>
-           <div class="integration_grid_logo_img">
-            <img alt="Github" loading="lazy" src='{% static "images/66ed524019660b8a1f5b0931_github.svg" %}'/>
-           </div>
-          </div>
-          <div class="integration_grid_logo is-flip is-2">
-           <div class="integration_grid_logo_bg">
-           </div>
-           <div class="integration_grid_logo_img">
-            <img alt="Datadog" loading="lazy" src='{% static "images/66ed52405b64309d6f361314_datadog.svg" %}'/>
-           </div>
-          </div>
-          <div class="integration_grid_logo is-flip is-3">
-           <div class="integration_grid_logo_bg">
-           </div>
-           <div class="integration_grid_logo_img">
-            <img alt="Github" loading="lazy" src='{% static "images/66ed524019660b8a1f5b0931_github.svg" %}'/>
-           </div>
-          </div>
-          <div class="integration_grid_logo is-flip is-4">
-           <div class="integration_grid_logo_bg">
-           </div>
-           <div class="integration_grid_logo_img">
-            <img alt="Github" loading="lazy" src='{% static "images/66ed524019660b8a1f5b0931_github.svg" %}'/>
-           </div>
-          </div>
-         </div>
-         <div class="integration_grid_content" id="w-node-cfe6a4fb-55b8-ccdb-4156-8c63ba5aa269-952b4610">
-          <div class="integration_grid_item_title is-title">
-           <div class="integrations_content_abs">
-            <div class="integrations_content">
-             <h2 class="integrations_content_title heading-style-h3">
-              Your Tech Stack,
-              <span class="text-color-green">
-               Integrated Seamlessly
-              </span>
-             </h2>
-             <p class="integrations_content_para text-size-large">
-              <span class="text-color-green-lighter">
-               Deductive AI integrates with your code and existing observability tools, enhancing your current workflows without disruption
-              </span>
-             </p>
-            </div>
-           </div>
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_item">
-          </div>
-          <div class="integration_grid_logo is-prometheus" integration-logo="">
-           <img alt="prometheus" loading="eager" src='{% static "images/66ed524080115bb772ae9b7e_prometheus.svg" %}'/>
-          </div>
-          <div class="integration_grid_logo is-open-telemetry" integration-logo="">
-           <img alt="open telemetry" loading="eager" src='{% static "images/66ed5240684457772673ed3f_opentelemetry.svg" %}'/>
-          </div>
-          <div class="integration_grid_logo is-open-elastic" integration-logo="">
-           <img alt="Elastic" loading="eager" src='{% static "images/66ed5240604dbf06577fc662_elastic.svg" %}'/>
-          </div>
-          <div class="integration_grid_logo is-open-github" integration-logo="">
-           <img alt="Github" loading="eager" src='{% static "images/66ed524019660b8a1f5b0931_github.svg" %}'/>
-          </div>
-          <div class="integration_grid_logo is-grafana" integration-logo="">
-           <img alt="Grafana" loading="eager" src='{% static "images/66ed5240e729846d3bcccc25_grafana.svg" %}'/>
-          </div>
-          <div class="integration_grid_logo is-splunk" integration-logo="">
-           <img alt="splunk" loading="eager" src='{% static "images/66ed524031b9f134e780889e_splunk.svg" %}'/>
-          </div>
-          <div class="integration_grid_logo is-datadog" integration-logo="">
-           <img alt="Datadog" loading="eager" src='{% static "images/66ed52405b64309d6f361314_datadog.svg" %}'/>
-          </div>
-          <div class="integration_grid_logo is-new-relic" integration-logo="">
-           <img alt="New relic" loading="eager" src='{% static "images/66ed52405b64309d6f361317_new%20relic.svg" %}'/>
-          </div>
-          <div class="integration_grid_logo is-jira" integration-logo="">
-           <img alt="Jira" loading="eager" src='{% static "images/66ed5240e40bae7ba9f4e850_jira.svg" %}'/>
-          </div>
-         </div>
-        </div>
-       </div>
-      </div>
-     </div>
      <div class="home_integrations_note">
       <div class="home_integrations_note_block">
        <div class="zap-icon">
@@ -1404,7 +631,7 @@ margin: 0rem !important;
        <div class="footer_wrapper">
         <div class="footer_row">
          <a aria-current="page" class="footer_logo w-inline-block w--current" href="/">
-          <img alt="" loading="lazy" src='{% static "images/67c9bffc2da249a85dd0e3b2_Logo%20Dark%20BG.svg" %}'/>
+          {% comment %} <img alt="" loading="lazy" src='{% static "images/67c9bffc2da249a85dd0e3b2_Logo%20Dark%20BG.svg" %}'/> {% endcomment %}
          </a>
          <div class="footer_link_wrapper">
           <div class="hide">
@@ -1540,7 +767,7 @@ margin: 0rem !important;
        <div class="container-large">
         <div class="hide">
          <div class="footer_logo_large">
-          <img alt="Deductive " loading="lazy" src='{% static "images/66eeac2a3d20e5d8136bfa53_footer-logo-large-4.svg" %}'/>
+          {% comment %} <img alt="Deductive " loading="lazy" src='{% static "images/66eeac2a3d20e5d8136bfa53_footer-logo-large-4.svg" %}'/> {% endcomment %}
          </div>
         </div>
        </div>
@@ -1550,7 +777,7 @@ margin: 0rem !important;
       <div class="padding-global">
        <div class="container-large">
         <div class="text-size-small text-color-dark-green-lighter">
-         © 2024 Deductive AI. All rights reserved.
+         © 2022 sustanylize AI. All rights reserved.
         </div>
        </div>
       </div>
