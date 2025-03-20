@@ -8,7 +8,7 @@ def landing_page(request):
 def login_page(request):
     return render(request, 'home/login.html')  # Rendering login page from 'home/templates/home/'
 
-def index(request):
+def home(request):
     return render(request, 'home/index.html')  # Rendering the dashboard index page from 'home/templates/home/'
 
 def register(request):
