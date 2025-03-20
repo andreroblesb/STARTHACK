@@ -20,7 +20,7 @@ def create_widgets():
     """Create widgets based on index.html configuration"""
     widgets = [
         {
-            'name': 'Sustainability score',
+            'name': 'sustainability_score',
             'cost': Decimal('200.00'),
             'source_id': 'sustainability_score',
             'active': True,  # Changed from active_by_default to active
@@ -30,7 +30,7 @@ def create_widgets():
             'height': 5
         },
         {
-            'name': 'Top-k inefficient devices',
+            'name': 'top_k_inefficient_devices',
             'cost': Decimal('200.00'),
             'source_id': 'top_k_inefficient_devices',
             'active': True,  # Changed from active_by_default to active
@@ -40,7 +40,7 @@ def create_widgets():
             'height': 5
         },
         {
-            'name': 'Energy consumption per day-blocks',
+            'name': 'energy_per_block_day',
             'cost': Decimal('200.00'),
             'source_id': 'energy_per_block_day',
             'active': True,  # Changed from active_by_default to active
@@ -50,7 +50,7 @@ def create_widgets():
             'height': 5
         },
         {
-            'name': 'Energy oversight',
+            'name': 'energy_sight',
             'cost': Decimal('200.00'),
             'source_id': 'energy_sight',
             'active': True,  # Changed from active_by_default to active
@@ -60,7 +60,7 @@ def create_widgets():
             'height': 5
         },
         {
-            'name': 'Predictive maintenance alerts',
+            'name': 'mantainance_devices',
             'cost': Decimal('200.00'),
             'source_id': 'maintenance_devices',
             'active': True,  # Changed from active_by_default to active
@@ -70,7 +70,7 @@ def create_widgets():
             'height': 5
         },
         {
-            'name': 'Device amortization',
+            'name': 'amortization_devices',
             'cost': Decimal('200.00'),
             'source_id': 'amortization_devices',
             'active': True,  # Changed from active_by_default to active
@@ -80,7 +80,7 @@ def create_widgets():
             'height': 5
         },
         {
-            'name': 'Efficiency metrics',
+            'name': 'efficiency_devices',
             'cost': Decimal('200.00'),
             'source_id': 'efficiency_devices',
             'active': True,  # Changed from active_by_default to active
@@ -90,7 +90,7 @@ def create_widgets():
             'height': 5
         },
         {
-            'name': 'Energy advisor chatbot',
+            'name': 'chatbot_advisor',
             'cost': Decimal('200.00'),
             'source_id': 'chatbot_advisor',
             'active': True,  # Changed from active_by_default to active

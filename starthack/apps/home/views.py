@@ -70,6 +70,7 @@ def remove_widget(request):
     try:
         data = json.loads(request.body)
         widget_id = data.get("widget_id")
+        print("WTF", widget_id)
 
         if not widget_id:
             return JsonResponse({"success": False, "error": "No widget_id provided"}, status=400)
@@ -91,25 +92,23 @@ def remove_widget(request):
     except Exception as e:
         return JsonResponse({"success": False, "error": str(e)}, status=500)
 
+@csrf_exempt
 def add_widget(request):
-    if request.method == "POST":
-        try:
-            data = json.loads(request.body)  # Parse JSON from AJAX request
-            widget_id = data.get("widget_id")
+    try:
+        data = json.loads(request.body)  # Parse JSON from AJAX request
+        widget_id = data.get("widget_id")
 
-            # Modify this based on your actual model name
-            from .models import Widget  # ✅ Import your model
+        # Modify this based on your actual model name
+        from .models import Widget  # ✅ Import your model
 
-            widget = Widget.objects.filter(source_id=widget_id).first()
+        widget = Widget.objects.filter(source_id=widget_id).first()
 
-            if widget:
-                widget.active = True  # ✅ Activate the widget
-                widget.save()
+        if widget:
+            widget.active = True  # ✅ Activate the widget
+            widget.save()
 
-                return JsonResponse({"success": True, "message": f"Widget {widget_id} added."})
-            else:
-                return JsonResponse({"success": False, "error": "Widget not found."}, status=404)
-        except Exception as e:
-            return JsonResponse({"success": False, "error": str(e)}, status=500)
-
-    return JsonResponse({"success": False, "error": "Invalid request."}, status=400)
+            return JsonResponse({"success": True, "message": f"Widget {widget_id} added."})
+        else:
+            return JsonResponse({"success": False, "error": "Widget not found."}, status=404)
+    except Exception as e:
+        return JsonResponse({"success": False, "error": str(e)}, status=500)

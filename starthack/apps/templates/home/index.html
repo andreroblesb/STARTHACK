@@ -63,7 +63,7 @@
           </h3>
           <button
             class="btn btn-link btn-danger widget-delete-btn"
-            data-widget-id="sustainability-widget"
+            data-widget-id="sustainability_score"
             onclick="removeWidgetById('sustainability_score')"
           >
             <i class="tim-icons icon-simple-remove"></i>
@@ -77,7 +77,6 @@
       </div>
     </div>
 
-
     <div id="top_k_inefficient_devices">
       <div class="card card-chart position-relative">
         <div class="card-header">
@@ -86,7 +85,7 @@
             <i class="tim-icons icon-alert-circle-exc text-warning"></i> Top-k
             inefficient devices
           </h3>
-                    <button
+          <button
             class="btn btn-link btn-danger widget-delete-btn"
             data-widget-id="top-k-inefficient-widget"
             onclick="removeWidgetById('top_k_inefficient_devices')"
@@ -108,9 +107,9 @@
           <h5 class="card-category">kWh</h5>
           <h3 class="card-title">
             <i class="tim-icons icon-bulb-63 text-info"></i> Energy consumption
-            per day-blocks
+            per day blocks
           </h3>
-                    <button
+          <button
             class="btn btn-link btn-danger widget-delete-btn"
             data-widget-id="energy-blocks-day-widget"
             onclick="removeWidgetById('energy_per_block_day')"
@@ -134,7 +133,7 @@
             <i class="tim-icons icon-chart-pie-36 text-primary"></i> Top-k power
             consuming devices
           </h3>
-                    <button
+          <button
             class="btn btn-link btn-danger widget-delete-btn"
             data-widget-id="energy-sight-widget"
             onclick="removeWidgetById('energy_sight')"
@@ -158,7 +157,7 @@
             <i class="tim-icons icon-settings text-danger"></i> Predictive
             maintenance alerts
           </h3>
-                    <button
+          <button
             class="btn btn-link btn-danger widget-delete-btn"
             data-widget-id="mantainance-devices-widget"
             onclick="removeWidgetById('manteinance_devices')"
@@ -182,7 +181,7 @@
             <i class="tim-icons icon-money-coins text-success"></i> Device
             amortization
           </h3>
-                    <button
+          <button
             class="btn btn-link btn-danger widget-delete-btn"
             data-widget-id="amortization-devices-widget"
             onclick="removeWidgetById('amortization_devices')"
@@ -206,7 +205,7 @@
             <i class="tim-icons icon-chart-bar-32 text-info"></i> Efficiency
             metrics
           </h3>
-                    <button
+          <button
             class="btn btn-link btn-danger widget-delete-btn"
             data-widget-id="efficiency-devices-widget"
             onclick="removeWidgetById('efficiency_devices')"
@@ -283,176 +282,215 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
 
 <script>
-    // Widget registry dynamically loaded from Django context
-    window.widgetRegistry = {
-      {% for widget_key, widget in widgets.items %}  // Changed from context.widgets.items to widgets.items
-      "{{ widget_key }}": {
-        id: "{{ widget_key }}",
-        title: "{{ widget.name }}",
-        sourceId: "{{ widget.source_id }}",
-        added: {{ widget.active|lower }},
-        x: {{ widget.position_x }},
-        y: {{ widget.position_y }},
-        w: {{ widget.width }},
-        h: {{ widget.height }},
-        fee: {{ widget.cost }},
+  // Widget registry dynamically loaded from Django context
+  window.widgetRegistry = {
+      {% for widget_key, widget in widgets.items %}
+      "{{ widget.source_id }}": {  // Changed from widget_key to widget.source_id
+          id: "{{ widget.source_id }}",
+          title: "{{ widget.name }}",
+          sourceId: "{{ widget.source_id }}",
+          added: {{ widget.active|lower }},
+          x: {{ widget.position_x }},
+          y: {{ widget.position_y }},
+          w: {{ widget.width }},
+          h: {{ widget.height }},
+          fee: {{ widget.cost }},
       },
       {% endfor %}
-    };
+  };
 
-    // Global fee tracking
-    window.widget_fee = 0;
-    let grid;
+  // Global fee tracking
+  window.widget_fee = 0;
+  let grid;
 
-    $(document).ready(function () {
-      initializeGrid();
-      recalculateTotalFee();
-    });
+  $(document).ready(function () {
+    initializeGrid();
+    recalculateTotalFee();
+  });
 
-    // Calculate and update total widget fee
-    function recalculateTotalFee() {
-      let totalFee = 0;
-      Object.values(window.widgetRegistry).forEach(widget => {
-        if (widget.added) {
-          totalFee += parseFloat(widget.fee);
-        }
-      });
-
-      window.widget_fee = totalFee;
-      updateSidebarFeeDisplay();
-      console.log("Total widget fee updated:", totalFee.toFixed(2), "CHF/monthly");
+  // Update the sidebar fee display
+  function updateSidebarFeeDisplay() {
+    const feeElement = document.getElementById("widget-fee-display");
+    if (feeElement) {
+      feeElement.textContent = window.widget_fee.toFixed(2) + " CHF/monthly";
     }
-
-    // Update the sidebar fee display
-    function updateSidebarFeeDisplay() {
-      const feeElement = document.getElementById("widget-fee-display");
-      if (feeElement) {
-        feeElement.textContent = window.widget_fee.toFixed(2) + " CHF/monthly";
-      }
-    }
-
-    // Initialize GridStack and add widgets
-    console.log("Widget registry loaded:", window.widgetRegistry);
-    console.log("Widgets should be displayed if added is true.");
-
-    function initializeGrid() {
-      console.log("Initializing grid...");
-
-      $(".grid-stack").empty();  // Clear previous grid
-      grid = GridStack.init({
-        column: 12,
-        cellHeight: "auto",
-        animate: true,
-        margin: 10,
-        float: false,
-        disableOneColumnMode: false,
-      });
-
-      Object.values(window.widgetRegistry).forEach(widget => {
-        if (widget.added) {
-          addWidgetToGrid(widget);
-        }
-      });
-
-      $(".grid-stack").on("click", ".widget-delete-btn", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        removeWidgetById($(this).data("widget-id"));
-      });
-
-      setTimeout(() => {
-        initializeCharts();
-      }, 500);
-
-      console.log("Grid setup complete");
-    }
-
-    // Function to add a widget to the grid
-    function addWidgetToGrid(widget) {
-      try {
-        console.log("Adding widget:", widget.id);
-        const content = document.getElementById(widget.sourceId)?.innerHTML;
-        if (!content) {
-          console.error("Widget source not found:", widget.sourceId);
-          return false;
-        }
-
-        grid.addWidget({
-          x: widget.x,
-          y: widget.y,
-          w: widget.w,
-          h: widget.h,
-          id: widget.id,
-          content: content,
-        });
-
-        widget.added = true;
-        recalculateTotalFee();
-        return true;
-      } catch (e) {
-        console.error("Error adding widget:", e);
-        return false;
-      }
-    }
-
-    function getCSRFToken() {
-      return document.cookie
-          .split('; ')
-          .find(row => row.startsWith('csrftoken='))
-          ?.split('=')[1];
   }
 
-    // Remove widget by ID
-    function removeWidgetById(widgetId) {
-    console.log("Removing widget by ID:", widgetId);
+  // Initialize GridStack and add widgets
+  console.log("Widget registry loaded:", window.widgetRegistry);
+  console.log("Widgets should be displayed if added is true.");
 
-    // ✅ Find the widget in the registry
-    const widget = window.widgetRegistry[widgetId];
+  function initializeGrid() {
+    console.log("Initializing grid...");
 
-    if (!widget) {
-        console.warn(`Widget ${widgetId} not found in registry.`);
-        return;
-    }
-
-    // ✅ Find and remove the widget from the UI
-    const gridItem = document.querySelector(`[data-widget-id="${widgetId}"]`);
-    if (gridItem) {
-        gridItem.parentElement.removeChild(gridItem);
-    } else {
-        console.warn(`Could not find grid item with ID: ${widgetId}`);
-    }
-
-    // ✅ Send AJAX request to Django
-    fetch('/remove_widget/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': getCSRFToken() // Ensure CSRF protection
-        },
-        body: JSON.stringify({
-            widget_id: widgetId
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            console.log(`✅ Widget ${widgetId} removed successfully.`);
-        } else {
-            console.warn(`⚠️ Failed to remove widget ${widgetId}:`, data.error);
-        }
-    })
-    .catch(error => {
-        console.error("❌ AJAX Error:", error);
+    $(".grid-stack").empty();  // Clear previous grid
+    grid = GridStack.init({
+      column: 12,
+      cellHeight: "auto",
+      animate: true,
+      margin: 10,
+      float: false,
+      disableOneColumnMode: false,
     });
 
-    // ✅ Update fee
-    recalculateTotalFee();
-}
+    Object.values(window.widgetRegistry).forEach(widget => {
+      if (widget.added) {
+        addWidgetToGrid(widget);
+        updateWidgetStatus(widget.sourceId, true);
+      }
+    });
 
+    $(".grid-stack").on("click", ".widget-delete-btn", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      removeWidgetById($(this).data("widget-id"));
+    });
 
+    setTimeout(() => {
+      initializeCharts();
+    }, 500);
 
-    // Restore widget function
-    window.restoreWidget = function (widgetTitle) {
+    console.log("Grid setup complete");
+  }
+
+  // Function to add a widget to the grid
+  function addWidgetToGrid(widget) {
+      try {
+          console.log("Adding widget:", widget);
+          const content = document.getElementById(widget.sourceId)?.innerHTML;
+          if (!content) {
+              console.error("Widget source not found:", widget.sourceId);
+              return false;
+          }
+
+          // Check if widget is already in grid
+          const existingWidget = grid.engine.nodes.find(n => n.id === widget.sourceId);
+          if (existingWidget) {
+              console.log("Widget already exists in grid:", widget.sourceId);
+              return false;
+          }
+
+          // Add widget to grid
+          grid.addWidget({
+              x: widget.x,
+              y: widget.y,
+              w: widget.w,
+              h: widget.h,
+              id: widget.sourceId,  // Use sourceId as the grid item ID
+              content: content,
+          });
+
+          // Update widget status in database
+          fetch('/add_widget/', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRFToken': getCSRFToken()
+              },
+              body: JSON.stringify({
+                  widget_id: widget.sourceId
+              })
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  console.log(`Widget ${widget.sourceId} activated successfully`);
+                  window.widgetRegistry[widget.sourceId].added = true;
+                  // Update the UI to reflect the change
+                  updateWidgetStatus(widget.sourceId, true);
+                  // Recalculate fees
+                  recalculateTotalFee();
+              } else {
+                  console.error("Failed to activate widget:", data.error);
+                  grid.removeWidget(grid.engine.nodes.find(n => n.id === widget.sourceId));
+              }
+          })
+          .catch(error => {
+              console.error("Error updating widget status:", error);
+              grid.removeWidget(grid.engine.nodes.find(n => n.id === widget.sourceId));
+          });
+
+          return true;
+      } catch (e) {
+          console.error("Error adding widget:", e);
+          return false;
+      }
+  }
+
+  function getCSRFToken() {
+    return document.cookie
+        .split('; ')
+        .find(row => row.startsWith('csrftoken='))
+        ?.split('=')[1];
+  }
+
+  // Remove widget by ID
+  function removeWidgetById(widgetId) {
+      console.log("Removing widget:", widgetId);
+
+      // Find the widget element
+      const gridItem = document.querySelector(`.grid-stack-item[gs-id="${widgetId}"]`);
+      if (!gridItem) {
+          console.warn("Grid item not found:", widgetId);
+          return;
+      }
+
+      // Fade out animation
+      gridItem.style.transition = 'opacity 0.3s';
+      gridItem.style.opacity = '0';
+
+      // After animation, remove from grid and update registry
+      setTimeout(() => {
+          // Remove from GridStack
+          grid.removeWidget(gridItem);
+
+          // Update widget registry
+          if (window.widgetRegistry[widgetId]) {
+              window.widgetRegistry[widgetId].added = false;
+          }
+
+          // Send AJAX request to update server
+          fetch('/remove_widget/', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRFToken': getCSRFToken()
+              },
+              body: JSON.stringify({
+                  widget_id: widgetId
+              })
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  console.log(`Widget ${widgetId} deactivated successfully`);
+              } else {
+                  console.error("Failed to deactivate widget:", data.error);
+              }
+          })
+          .catch(error => {
+              console.error("Error updating widget status:", error);
+          });
+
+      }, 300); // Wait for fade out animation
+  }
+
+  // Function to update widget status in UI
+  function updateWidgetStatus(widgetId, isActive) {
+      const widgetElement = document.querySelector(`[data-widget-id="${widgetId}"]`);
+      if (widgetElement) {
+          if (isActive) {
+              widgetElement.classList.add('active');
+              widgetElement.textContent = 'Remove';
+          } else {
+              widgetElement.classList.remove('active');
+              widgetElement.textContent = 'Add';
+          }
+      }
+  }
+
+  // Restore widget function
+  window.restoreWidget = function (widgetTitle) {
       console.log("Attempting to restore widget:", widgetTitle);
       const widget = Object.values(window.widgetRegistry).find(w => w.title === widgetTitle);
       if (widget && !widget.added) {
@@ -460,125 +498,124 @@
         return true;
       }
       return false;
-    };
+  };
 
-    // New function to initialize charts
-    function initializeCharts() {
-      console.log("Initializing charts...");
+  // New function to initialize charts
+  function initializeCharts() {
+    console.log("Initializing charts...");
 
-      // Sustainability chart
-      try {
-        const sustainabilityCanvas = document.getElementById("sustainabilityChart");
-        if (sustainabilityCanvas) {
-          const ctx = sustainabilityCanvas.getContext("2d");
-          new Chart(ctx, {
-            type: "line",
-            data: {
-              labels: ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"],
-              datasets: [{
-                label: "Sustainability Score",
-                fill: true,
-                backgroundColor: "rgba(72,72,176,0.1)",
-                borderColor: "#d048b6",
-                data: [60, 65, 63, 68, 70, 71, 69, 72, 75, 76, 75, 77],
-              }]
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              legend: { display: false }
-            }
-          });
-          console.log("Sustainability chart initialized");
-        }
-      } catch (e) {
-        console.error("Error creating sustainability chart:", e);
+    // Sustainability chart
+    try {
+      const sustainabilityCanvas = document.getElementById("sustainabilityChart");
+      if (sustainabilityCanvas) {
+        const ctx = sustainabilityCanvas.getContext("2d");
+        new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"],
+            datasets: [{
+              label: "Sustainability Score",
+              fill: true,
+              backgroundColor: "rgba(72,72,176,0.1)",
+              borderColor: "#d048b6",
+              data: [60, 65, 63, 68, 70, 71, 69, 72, 75, 76, 75, 77],
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: { display: false }
+          }
+        });
+        console.log("Sustainability chart initialized");
       }
-
-      // Inefficient devices chart
-      try {
-        const inefficientCanvas = document.getElementById("inefficientChart");
-        if (inefficientCanvas) {
-          const ctx = inefficientCanvas.getContext("2d");
-          new Chart(ctx, {
-            type: "bar",
-            data: {
-              labels: ["Server AC", "Printer", "Kitchen", "Lighting"],
-              datasets: [{
-                label: "Inefficiency %",
-                backgroundColor: ["#dc3545", "#ffc107", "#ffc107", "#17a2b8"],
-                data: [87, 62, 58, 45],
-              }]
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: false,
-              legend: { display: false }
-            }
-          });
-          console.log("Inefficient chart initialized");
-        }
-      } catch (e) {
-        console.error("Error creating inefficient chart:", e);
-      }
-
-      // Energy blocks chart
-      try {
-        const energyCanvas = document.getElementById("energyBlocksChart");
-        if (energyCanvas) {
-          const ctx = energyCanvas.getContext("2d");
-          new Chart(ctx, {
-            type: "line",
-            data: {
-              labels: ["12AM", "4AM", "8AM", "12PM", "4PM", "8PM"],
-              datasets: [{
-                label: "Energy (kWh)",
-                fill: true,
-                backgroundColor: "rgba(66,134,121,0.15)",
-                borderColor: "#00d6b4",
-                data: [15, 12, 42, 50, 65, 45],
-              }]
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: false
-            }
-          });
-          console.log("Energy blocks chart initialized");
-        }
-      } catch (e) {
-        console.error("Error creating energy blocks chart:", e);
-      }
-
-      // Power consumption chart
-      try {
-        const powerCanvas = document.getElementById("powerConsumptionChart");
-        if (powerCanvas) {
-          const ctx = powerCanvas.getContext("2d");
-          new Chart(ctx, {
-            type: "pie",
-            data: {
-              labels: ["Data Center", "HVAC", "Lighting", "Office Eq."],
-              datasets: [{
-                backgroundColor: ["#ff5722", "#ff9800", "#ffc107", "#ffeb3b"],
-                data: [45.2, 32.8, 15.6, 6.4],
-              }]
-            },
-            options: {
-              responsive: true,
-              maintainAspectRatio: false
-            }
-          });
-          console.log("Power consumption chart initialized");
-        }
-      } catch (e) {
-        console.error("Error creating power consumption chart:", e);
-      }
-
-      // Initialize other charts similarly...
-      console.log("All charts initialized");
+    } catch (e) {
+      console.error("Error creating sustainability chart:", e);
     }
 
+    // Inefficient devices chart
+    try {
+      const inefficientCanvas = document.getElementById("inefficientChart");
+      if (inefficientCanvas) {
+        const ctx = inefficientCanvas.getContext("2d");
+        new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: ["Server AC", "Printer", "Kitchen", "Lighting"],
+            datasets: [{
+              label: "Inefficiency %",
+              backgroundColor: ["#dc3545", "#ffc107", "#ffc107", "#17a2b8"],
+              data: [87, 62, 58, 45],
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: { display: false }
+          }
+        });
+        console.log("Inefficient chart initialized");
+      }
+    } catch (e) {
+      console.error("Error creating inefficient chart:", e);
+    }
+
+    // Energy blocks chart
+    try {
+      const energyCanvas = document.getElementById("energyBlocksChart");
+      if (energyCanvas) {
+        const ctx = energyCanvas.getContext("2d");
+        new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: ["12AM", "4AM", "8AM", "12PM", "4PM", "8PM"],
+            datasets: [{
+              label: "Energy (kWh)",
+              fill: true,
+              backgroundColor: "rgba(66,134,121,0.15)",
+              borderColor: "#00d6b4",
+              data: [15, 12, 42, 50, 65, 45],
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false
+          }
+        });
+        console.log("Energy blocks chart initialized");
+      }
+    } catch (e) {
+      console.error("Error creating energy blocks chart:", e);
+    }
+
+    // Power consumption chart
+    try {
+      const powerCanvas = document.getElementById("powerConsumptionChart");
+      if (powerCanvas) {
+        const ctx = powerCanvas.getContext("2d");
+        new Chart(ctx, {
+          type: "pie",
+          data: {
+            labels: ["Data Center", "HVAC", "Lighting", "Office Eq."],
+            datasets: [{
+              backgroundColor: ["#ff5722", "#ff9800", "#ffc107", "#ffeb3b"],
+              data: [45.2, 32.8, 15.6, 6.4],
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false
+          }
+        });
+        console.log("Power consumption chart initialized");
+      }
+    } catch (e) {
+      console.error("Error creating power consumption chart:", e);
+    }
+
+    // Initialize other charts similarly...
+    console.log("All charts initialized");
+  }
 </script>
 
 {% endblock javascripts %}
