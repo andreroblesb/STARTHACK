@@ -7,9 +7,10 @@ from apps.home import views  # Import views from the home app
 urlpatterns = [
     # Include the home app urls
     path('', include('apps.home.urls')),
+    path('update-widget-status/', views.remove_widget, name='update_widget_status'),
 
     # You can add more global routes if needed
     # e.g., path('admin/', admin.site.urls), 
 ]
 
-# Define custom error pages if neede
+# Define custom error pages if needed

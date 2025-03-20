@@ -1,0 +1,322 @@
+{% extends "layouts/base.html" %} {% block title %} Dashboard {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %} {% block content %}
+
+<div class="content">
+  <div class="row">
+    <div class="col-12">
+      <div class="card card-chart">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-sm-6 text-left">
+              <h5 class="card-category">(W/day)</h5>
+              <h2 class="card-title">Energy performance</h2>
+            </div>
+            <div class="col-sm-6">
+              <div
+                class="btn-group btn-group-toggle float-right"
+                data-toggle="buttons"
+              >
+                <label class="btn btn-sm btn-primary btn-simple active" id="0">
+                  <input type="radio" name="options" checked />
+                  <span
+                    class="d-none d-sm-block d-md-block d-lg-block d-xl-block"
+                    >Day</span
+                  >
+                  <span class="d-block d-sm-none">
+                    <i class="tim-icons icon-single-02"></i>
+                  </span>
+                </label>
+                <label class="btn btn-sm btn-primary btn-simple" id="1">
+                  <input type="radio" class="d-none d-sm-none" name="options" />
+                  <span
+                    class="d-none d-sm-block d-md-block d-lg-block d-xl-block"
+                    >Week</span
+                  >
+                  <span class="d-block d-sm-none">
+                    <i class="tim-icons icon-gift-2"></i>
+                  </span>
+                </label>
+                <label class="btn btn-sm btn-primary btn-simple" id="2">
+                  <input type="radio" class="d-none" name="options" />
+                  <span
+                    class="d-none d-sm-block d-md-block d-lg-block d-xl-block"
+                    >Month</span
+                  >
+                  <span class="d-block d-sm-none">
+                    <i class="tim-icons icon-tap-02"></i>
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="chart-area">
+            <canvas id="chartBig1"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-4" id="glycol-card">
+      <div class="card card-chart position-relative">
+        <div class="card-header">
+          <h5 class="card-category">PH</h5>
+          <h3 class="card-title">
+            <i class="tim-icons icon-bell-55 text-primary"></i> Glycol tracking
+          </h3>
+          <button
+            class="btn btn-link btn-danger position-absolute"
+            style="right: 10px; top: 10px; opacity: 0; transition: opacity 0.3s"
+            onmouseover="this.style.opacity=1"
+            onmouseout="this.style.opacity=0"
+            onclick="deleteCard()"
+          >
+            <i class="tim-icons icon-simple-remove"></i>
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="chart-area">
+            <canvas id="chartLinePurple"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4" id="amortization-card">
+      <div class="card card-chart position-relative">
+        <div class="card-header">
+          <h5 class="card-category">CHF</h5>
+          <h3 class="card-title">
+            <i class="tim-icons icon-delivery-fast text-info"></i> Current
+            amortization
+          </h3>
+          <button
+            class="btn btn-link btn-danger position-absolute"
+            style="right: 10px; top: 10px; opacity: 0; transition: opacity 0.3s"
+            onmouseover="this.style.opacity=1"
+            onmouseout="this.style.opacity=0"
+          >
+            <i class="tim-icons icon-simple-remove"></i>
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="chart-area">
+            <canvas id="CountryChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4" id="weather-card">
+      <div class="card card-chart position-relative">
+        <div class="card-header">
+          <h5 class="card-category">°C</h5>
+          <h3 class="card-title">
+            <i class="tim-icons icon-send text-success"></i> Weather forecast
+          </h3>
+          <button
+            class="btn btn-link btn-danger position-absolute"
+            style="right: 10px; top: 10px; opacity: 0; transition: opacity 0.3s"
+            onmouseover="this.style.opacity=1"
+            onmouseout="this.style.opacity=0"
+          >
+            <i class="tim-icons icon-simple-remove"></i>
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="chart-area">
+            <canvas id="chartLineGreen"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Make restoreGlycolCard globally accessible
+    window.restoreGlycolCard = function () {
+      const glycolCard = document.getElementById("glycol-card");
+      const amortizationCard = document.getElementById("amortization-card");
+      const weatherCard = document.getElementById("weather-card");
+
+      if (glycolCard && glycolCard.style.display === "none") {
+        // Reset styles and make visible
+        glycolCard.style.display = "";
+        glycolCard.style.opacity = "1";
+        glycolCard.style.maxWidth = "";
+        glycolCard.style.margin = "";
+
+        // Restore original column sizes
+        amortizationCard.classList.remove("col-lg-6");
+        weatherCard.classList.remove("col-lg-6");
+        amortizationCard.classList.add("col-lg-4");
+        weatherCard.classList.add("col-lg-4");
+      }
+    };
+
+    function deleteCard() {
+      const glycolCard = document.getElementById("glycol-card");
+      const amortizationCard = document.getElementById("amortization-card");
+      const weatherCard = document.getElementById("weather-card");
+
+      // Set transitions for all cards
+      glycolCard.style.transition = "opacity 0.3s, max-width 0.5s, margin 0.5s";
+      amortizationCard.style.transition = "all 0.5s ease-in-out";
+      weatherCard.style.transition = "all 0.5s ease-in-out";
+
+      // Start the fade out and collapse
+      glycolCard.style.opacity = "0";
+      glycolCard.style.maxWidth = "0";
+      glycolCard.style.margin = "0";
+
+      // Wait for fade out, then adjust other cards
+      setTimeout(() => {
+        glycolCard.style.display = "none";
+
+        // Smoothly expand remaining cards
+        amortizationCard.classList.remove("col-lg-4");
+        weatherCard.classList.remove("col-lg-4");
+        amortizationCard.classList.add("col-lg-6");
+        weatherCard.classList.add("col-lg-6");
+      }, 300);
+    }
+  </script>
+  <div class="row">
+    <div class="col-lg-6 col-md-12">
+      <div class="card card-tasks">
+        <div class="card-header">
+          <h6 class="title d-inline">IA improvements proposals</h6>
+          <p class="card-category d-inline">(when done, mark)</p>
+        </div>
+        <div class="card-body">
+          <div class="table-full-width table-responsive">
+            <table class="table">
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value=""
+                        />
+                        <span class="form-check-sign">
+                          <span class="check"></span>
+                        </span>
+                      </label>
+                    </div>
+                  </td>
+                  <td>
+                    <p class="title">Update the Documentation</p>
+                    <p class="text-muted">Dwuamish Head, Seattle, WA 8:47 AM</p>
+                  </td>
+                  <td class="td-actions text-right">
+                    <button
+                      type="button"
+                      rel="tooltip"
+                      title=""
+                      class="btn btn-link"
+                      data-original-title="Edit Task"
+                    >
+                      <i class="tim-icons icon-pencil"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6 col-md-12">
+    <div class="card position-relative">
+      <div class="card-header">
+        <h4 class="card-title">Environmental CSR Leaderboard</h4>
+        <button
+        class="btn btn-link btn-danger position-absolute"
+        style="right: 10px; top: 10px; opacity: 0; transition: opacity 0.3s"
+        onmouseover="this.style.opacity=1"
+        onmouseout="this.style.opacity=0"
+        >
+        <i class="tim-icons icon-simple-remove"></i>
+        </button>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+        <table class="table tablesorter" id="">
+          <thead class="text-primary">
+            <tr>
+            <th>Rank</th>
+            <th>Company</th>
+            <th>Country</th>
+            <th class="text-center">Puntuation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+            <td>Dakota Rice</td>
+            <td>Niger</td>
+            <td>Oud-Turnhout</td>
+            <td class="text-center">$36,738</td>
+            </tr>
+            <tr>
+            <td>Minerva Hooper</td>
+            <td>Curaçao</td>
+            <td>Sinaai-Waas</td>
+            <td class="text-center">$23,789</td>
+            </tr>
+            <tr>
+            <td>Sage Rodriguez</td>
+            <td>Netherlands</td>
+            <td>Baileux</td>
+            <td class="text-center">$56,142</td>
+            </tr>
+            <tr>
+            <td>Philip Chaney</td>
+            <td>Korea, South</td>
+            <td>Overland Park</td>
+            <td class="text-center">$38,735</td>
+            </tr>
+            <tr>
+            <td>Doris Greene</td>
+            <td>Malawi</td>
+            <td>Feldkirchen in Kärnten</td>
+            <td class="text-center">$63,542</td>
+            </tr>
+            <tr>
+            <td>Mason Porter</td>
+            <td>Chile</td>
+            <td>Gloucester</td>
+            <td class="text-center">$78,615</td>
+            </tr>
+            <tr>
+            <td>Jon Porter</td>
+            <td>Portugal</td>
+            <td>Gloucester</td>
+            <td class="text-center">$98,615</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+<script>
+  $(document).ready(function () {
+    // Javascript method's body can be found in assets/js/demos.js
+    demo.initDashboardPageCharts();
+  });
+</script>
+
+{% endblock javascripts %}

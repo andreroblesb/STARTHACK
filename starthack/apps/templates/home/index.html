@@ -1,486 +1,268 @@
 {% extends "layouts/base.html" %} {% block title %} Dashboard {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
-{% block stylesheets %}{% endblock stylesheets %} {% block content %}
+{% block stylesheets %}
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/gridstack@6.0.1/dist/gridstack.min.css"
+/>
+<style>
+  .grid-stack-item {
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .grid-stack-item-content {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+  }
+  .grid-stack-item.ui-draggable-dragging {
+    z-index: 9999 !important;
+  }
+  /* Improved delete button styling */
+  .widget-delete-btn {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 10;
+  }
+  .card-header:hover .widget-delete-btn {
+    opacity: 1;
+  }
+</style>
+{% endblock stylesheets %} {% block content %}
 
 <div class="content">
-  <div class="row">
+  <!-- Energy performance chart - full width -->
+  <div class="row mb-4">
     <div class="col-12">
       <div class="card card-chart">
-        <div class="card-header">
-          <div class="row">
-            <div class="col-sm-6 text-left">
-              <h5 class="card-category">(W/day)</h5>
-              <h2 class="card-title">Energy performance</h2>
-            </div>
-            <div class="col-sm-6">
-              <div
-                class="btn-group btn-group-toggle float-right"
-                data-toggle="buttons"
-              >
-                <label class="btn btn-sm btn-primary btn-simple active" id="0">
-                  <input type="radio" name="options" checked />
-                  <span
-                    class="d-none d-sm-block d-md-block d-lg-block d-xl-block"
-                    >Day</span
-                  >
-                  <span class="d-block d-sm-none">
-                    <i class="tim-icons icon-single-02"></i>
-                  </span>
-                </label>
-                <label class="btn btn-sm btn-primary btn-simple" id="1">
-                  <input type="radio" class="d-none d-sm-none" name="options" />
-                  <span
-                    class="d-none d-sm-block d-md-block d-lg-block d-xl-block"
-                    >Week</span
-                  >
-                  <span class="d-block d-sm-none">
-                    <i class="tim-icons icon-gift-2"></i>
-                  </span>
-                </label>
-                <label class="btn btn-sm btn-primary btn-simple" id="2">
-                  <input type="radio" class="d-none" name="options" />
-                  <span
-                    class="d-none d-sm-block d-md-block d-lg-block d-xl-block"
-                    >Month</span
-                  >
-                  <span class="d-block d-sm-none">
-                    <i class="tim-icons icon-tap-02"></i>
-                  </span>
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="chart-area">
-            <canvas id="chartBig1"></canvas>
-          </div>
-        </div>
+        <!-- ...existing code... -->
       </div>
     </div>
   </div>
+
+  <!-- Grid Stack Container -->
   <div class="row">
-    <div class="col-lg-4" id="glycol-card">
+    <div class="col-12">
+      <div class="grid-stack"></div>
+    </div>
+  </div>
+
+  <!-- Original cards hidden, will be cloned into grid -->
+  <div style="display: none">
+    <div id="sustainability-card-original">
       <div class="card card-chart position-relative">
         <div class="card-header">
-          <h5 class="card-category">PH</h5>
+          <h5 class="card-category">ESG Score</h5>
           <h3 class="card-title">
-            <i class="tim-icons icon-bell-55 text-primary"></i> Glycol tracking
+            <i class="tim-icons icon-earth-2 text-success"></i> Sustainability
+            score
           </h3>
           <button
-            class="btn btn-link btn-danger position-absolute"
-            style="right: 10px; top: 10px; opacity: 0; transition: opacity 0.3s"
-            onmouseover="this.style.opacity=1"
-            onmouseout="this.style.opacity=0"
-            onclick="deleteCard()"
+            class="btn btn-link btn-danger widget-delete-btn"
+            data-widget-id="sustainability-widget"
+            onclick="removeWidgetById('sustainability_score_widget')"
           >
             <i class="tim-icons icon-simple-remove"></i>
           </button>
         </div>
         <div class="card-body">
           <div class="chart-area">
-            <canvas id="chartLinePurple"></canvas>
+            <canvas id="sustainabilityChart"></canvas>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-lg-4" id="amortization-card">
+
+    <div id="top-k-inefficient-card-original">
       <div class="card card-chart position-relative">
         <div class="card-header">
-          <h5 class="card-category">Euro</h5>
+          <h5 class="card-category">Efficiency</h5>
           <h3 class="card-title">
-            <i class="tim-icons icon-delivery-fast text-info"></i> Current
+            <i class="tim-icons icon-alert-circle-exc text-warning"></i> Top-k
+            inefficient devices
+          </h3>
+          <button
+            class="btn btn-link btn-danger widget-delete-btn"
+            data-widget-id="inefficient-widget"
+          >
+            <i class="tim-icons icon-simple-remove"></i>
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="chart-area">
+            <canvas id="inefficientChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="energy-day-blocks-card-original">
+      <div class="card card-chart position-relative">
+        <div class="card-header">
+          <h5 class="card-category">kWh</h5>
+          <h3 class="card-title">
+            <i class="tim-icons icon-bulb-63 text-info"></i> Energy consumption
+            per day-blocks
+          </h3>
+          <button
+            class="btn btn-link btn-danger widget-delete-btn"
+            data-widget-id="energy-blocks-widget"
+          >
+            <i class="tim-icons icon-simple-remove"></i>
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="chart-area">
+            <canvas id="energyBlocksChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="top-k-power-card-original">
+      <div class="card card-chart position-relative">
+        <div class="card-header">
+          <h5 class="card-category">kW</h5>
+          <h3 class="card-title">
+            <i class="tim-icons icon-chart-pie-36 text-primary"></i> Top-k power
+            consuming devices
+          </h3>
+          <button
+            class="btn btn-link btn-danger widget-delete-btn"
+            data-widget-id="power-widget"
+          >
+            <i class="tim-icons icon-simple-remove"></i>
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="chart-area">
+            <canvas id="powerConsumptionChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="maintenance-card-original">
+      <div class="card card-chart position-relative">
+        <div class="card-header">
+          <h5 class="card-category">Risk Level</h5>
+          <h3 class="card-title">
+            <i class="tim-icons icon-settings text-danger"></i> Predictive
+            maintenance alerts
+          </h3>
+          <button
+            class="btn btn-link btn-danger widget-delete-btn"
+            data-widget-id="maintenance-widget"
+          >
+            <i class="tim-icons icon-simple-remove"></i>
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="chart-area">
+            <canvas id="maintenanceChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="amortization-card-original">
+      <div class="card card-chart position-relative">
+        <div class="card-header">
+          <h5 class="card-category">CHF</h5>
+          <h3 class="card-title">
+            <i class="tim-icons icon-money-coins text-success"></i> Device
             amortization
           </h3>
           <button
-            class="btn btn-link btn-danger position-absolute"
-            style="right: 10px; top: 10px; opacity: 0; transition: opacity 0.3s"
-            onmouseover="this.style.opacity=1"
-            onmouseout="this.style.opacity=0"
+            class="btn btn-link btn-danger widget-delete-btn"
+            data-widget-id="amortization-widget"
           >
             <i class="tim-icons icon-simple-remove"></i>
           </button>
         </div>
         <div class="card-body">
           <div class="chart-area">
-            <canvas id="CountryChart"></canvas>
+            <canvas id="amortizationChart"></canvas>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-lg-4" id="weather-card">
+
+    <div id="efficiency-card-original">
       <div class="card card-chart position-relative">
         <div class="card-header">
-          <h5 class="card-category">°C</h5>
+          <h5 class="card-category">Performance</h5>
           <h3 class="card-title">
-            <i class="tim-icons icon-send text-success"></i> Weather forecast
+            <i class="tim-icons icon-chart-bar-32 text-info"></i> Efficiency
+            metrics
           </h3>
           <button
-            class="btn btn-link btn-danger position-absolute"
-            style="right: 10px; top: 10px; opacity: 0; transition: opacity 0.3s"
-            onmouseover="this.style.opacity=1"
-            onmouseout="this.style.opacity=0"
+            class="btn btn-link btn-danger widget-delete-btn"
+            data-widget-id="efficiency-widget"
           >
             <i class="tim-icons icon-simple-remove"></i>
           </button>
         </div>
         <div class="card-body">
           <div class="chart-area">
-            <canvas id="chartLineGreen"></canvas>
+            <canvas id="efficiencyChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="chatbot-card-original">
+      <div class="card card-chart position-relative">
+        <div class="card-header">
+          <h5 class="card-category">Assistant</h5>
+          <h3 class="card-title">
+            <i class="tim-icons icon-chat-33 text-primary"></i> Energy advisor
+            chatbot
+          </h3>
+          <button
+            class="btn btn-link btn-danger widget-delete-btn"
+            data-widget-id="chatbot-widget"
+            onclick="removeWidgetById('chatbot-widget')"
+          >
+            <i class="tim-icons icon-simple-remove"></i>
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="chat-container" style="height: 300px; overflow-y: auto">
+            <div class="chat-messages" id="chatMessages">
+              <div class="message bot">
+                Hello! I'm your energy efficiency assistant. How can I help you
+                optimize your energy usage today?
+              </div>
+            </div>
+            <div class="chat-input d-flex mt-3">
+              <input
+                type="text"
+                class="form-control"
+                id="chatInput"
+                placeholder="Ask about energy efficiency..."
+              />
+              <button class="btn btn-primary ml-2" onclick="sendChatMessage()">
+                <i class="tim-icons icon-send"></i>
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <script>
-    // Make restoreGlycolCard globally accessible
-    window.restoreGlycolCard = function () {
-      const glycolCard = document.getElementById("glycol-card");
-      const amortizationCard = document.getElementById("amortization-card");
-      const weatherCard = document.getElementById("weather-card");
-
-      if (glycolCard && glycolCard.style.display === "none") {
-        // Reset styles and make visible
-        glycolCard.style.display = "";
-        glycolCard.style.opacity = "1";
-        glycolCard.style.maxWidth = "";
-        glycolCard.style.margin = "";
-
-        // Restore original column sizes
-        amortizationCard.classList.remove("col-lg-6");
-        weatherCard.classList.remove("col-lg-6");
-        amortizationCard.classList.add("col-lg-4");
-        weatherCard.classList.add("col-lg-4");
-      }
-    };
-
-    function deleteCard() {
-      const glycolCard = document.getElementById("glycol-card");
-      const amortizationCard = document.getElementById("amortization-card");
-      const weatherCard = document.getElementById("weather-card");
-
-      // Set transitions for all cards
-      glycolCard.style.transition = "opacity 0.3s, max-width 0.5s, margin 0.5s";
-      amortizationCard.style.transition = "all 0.5s ease-in-out";
-      weatherCard.style.transition = "all 0.5s ease-in-out";
-
-      // Start the fade out and collapse
-      glycolCard.style.opacity = "0";
-      glycolCard.style.maxWidth = "0";
-      glycolCard.style.margin = "0";
-
-      // Wait for fade out, then adjust other cards
-      setTimeout(() => {
-        glycolCard.style.display = "none";
-
-        // Smoothly expand remaining cards
-        amortizationCard.classList.remove("col-lg-4");
-        weatherCard.classList.remove("col-lg-4");
-        amortizationCard.classList.add("col-lg-6");
-        weatherCard.classList.add("col-lg-6");
-      }, 300);
-    }
-  </script>
+  <!-- Rest of the bottom section -->
   <div class="row">
     <div class="col-lg-6 col-md-12">
-      <div class="card card-tasks">
-        <div class="card-header">
-          <h6 class="title d-inline">IA improvements proposals</h6>
-          <p class="card-category d-inline">(when done, mark)</p>
-          <div class="dropdown">
-            <button
-              type="button"
-              class="btn btn-link dropdown-toggle btn-icon"
-              data-toggle="dropdown"
-            >
-              <i class="tim-icons icon-settings-gear-63"></i>
-            </button>
-            <div
-              class="dropdown-menu dropdown-menu-right"
-              aria-labelledby="dropdownMenuLink"
-            >
-              <a class="dropdown-item" href="#pablo">Action</a>
-              <a class="dropdown-item" href="#pablo">Another action</a>
-              <a class="dropdown-item" href="#pablo">Something else</a>
-            </div>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="table-full-width table-responsive">
-            <table class="table">
-              <tbody>
-                <tr>
-                  <td>
-                    <div class="form-check">
-                      <label class="form-check-label">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value=""
-                        />
-                        <span class="form-check-sign">
-                          <span class="check"></span>
-                        </span>
-                      </label>
-                    </div>
-                  </td>
-                  <td>
-                    <p class="title">Update the Documentation</p>
-                    <p class="text-muted">Dwuamish Head, Seattle, WA 8:47 AM</p>
-                  </td>
-                  <td class="td-actions text-right">
-                    <button
-                      type="button"
-                      rel="tooltip"
-                      title=""
-                      class="btn btn-link"
-                      data-original-title="Edit Task"
-                    >
-                      <i class="tim-icons icon-pencil"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="form-check">
-                      <label class="form-check-label">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value=""
-                          checked=""
-                        />
-                        <span class="form-check-sign">
-                          <span class="check"></span>
-                        </span>
-                      </label>
-                    </div>
-                  </td>
-                  <td>
-                    <p class="title">GDPR Compliance</p>
-                    <p class="text-muted">
-                      The GDPR is a regulation that requires businesses to
-                      protect the personal data and privacy of Europe citizens
-                      for transactions that occur within EU member states.
-                    </p>
-                  </td>
-                  <td class="td-actions text-right">
-                    <button
-                      type="button"
-                      rel="tooltip"
-                      title=""
-                      class="btn btn-link"
-                      data-original-title="Edit Task"
-                    >
-                      <i class="tim-icons icon-pencil"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="form-check">
-                      <label class="form-check-label">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value=""
-                        />
-                        <span class="form-check-sign">
-                          <span class="check"></span>
-                        </span>
-                      </label>
-                    </div>
-                  </td>
-                  <td>
-                    <p class="title">Solve the issues</p>
-                    <p class="text-muted">
-                      Fifty percent of all respondents said they would be more
-                      likely to shop at a company
-                    </p>
-                  </td>
-                  <td class="td-actions text-right">
-                    <button
-                      type="button"
-                      rel="tooltip"
-                      title=""
-                      class="btn btn-link"
-                      data-original-title="Edit Task"
-                    >
-                      <i class="tim-icons icon-pencil"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="form-check">
-                      <label class="form-check-label">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value=""
-                        />
-                        <span class="form-check-sign">
-                          <span class="check"></span>
-                        </span>
-                      </label>
-                    </div>
-                  </td>
-                  <td>
-                    <p class="title">Release v2.0.0</p>
-                    <p class="text-muted">
-                      Ra Ave SW, Seattle, WA 98116, SUA 11:19 AM
-                    </p>
-                  </td>
-                  <td class="td-actions text-right">
-                    <button
-                      type="button"
-                      rel="tooltip"
-                      title=""
-                      class="btn btn-link"
-                      data-original-title="Edit Task"
-                    >
-                      <i class="tim-icons icon-pencil"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="form-check">
-                      <label class="form-check-label">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value=""
-                        />
-                        <span class="form-check-sign">
-                          <span class="check"></span>
-                        </span>
-                      </label>
-                    </div>
-                  </td>
-                  <td>
-                    <p class="title">Export the processed files</p>
-                    <p class="text-muted">
-                      The report also shows that consumers will not easily
-                      forgive a company once a breach exposing their personal
-                      data occurs.
-                    </p>
-                  </td>
-                  <td class="td-actions text-right">
-                    <button
-                      type="button"
-                      rel="tooltip"
-                      title=""
-                      class="btn btn-link"
-                      data-original-title="Edit Task"
-                    >
-                      <i class="tim-icons icon-pencil"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="form-check">
-                      <label class="form-check-label">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value=""
-                        />
-                        <span class="form-check-sign">
-                          <span class="check"></span>
-                        </span>
-                      </label>
-                    </div>
-                  </td>
-                  <td>
-                    <p class="title">Arival at export process</p>
-                    <p class="text-muted">Capitol Hill, Seattle, WA 12:34 AM</p>
-                  </td>
-                  <td class="td-actions text-right">
-                    <button
-                      type="button"
-                      rel="tooltip"
-                      title=""
-                      class="btn btn-link"
-                      data-original-title="Edit Task"
-                    >
-                      <i class="tim-icons icon-pencil"></i>
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+      <!-- ...existing code... -->
     </div>
     <div class="col-lg-6 col-md-12">
-      <div class="card">
-        <div class="card-header">
-          <h4 class="card-title">Environmental CSR Leaderboard</h4>
-        </div>
-        <div class="card-body">
-          <div class="table-responsive">
-            <table class="table tablesorter" id="">
-              <thead class="text-primary">
-                <tr>
-                  <th>Rank</th>
-                  <th>Company</th>
-                  <th>Country</th>
-                  <th class="text-center">Puntuation</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Dakota Rice</td>
-                  <td>Niger</td>
-                  <td>Oud-Turnhout</td>
-                  <td class="text-center">$36,738</td>
-                </tr>
-                <tr>
-                  <td>Minerva Hooper</td>
-                  <td>Curaçao</td>
-                  <td>Sinaai-Waas</td>
-                  <td class="text-center">$23,789</td>
-                </tr>
-                <tr>
-                  <td>Sage Rodriguez</td>
-                  <td>Netherlands</td>
-                  <td>Baileux</td>
-                  <td class="text-center">$56,142</td>
-                </tr>
-                <tr>
-                  <td>Philip Chaney</td>
-                  <td>Korea, South</td>
-                  <td>Overland Park</td>
-                  <td class="text-center">$38,735</td>
-                </tr>
-                <tr>
-                  <td>Doris Greene</td>
-                  <td>Malawi</td>
-                  <td>Feldkirchen in Kärnten</td>
-                  <td class="text-center">$63,542</td>
-                </tr>
-                <tr>
-                  <td>Mason Porter</td>
-                  <td>Chile</td>
-                  <td>Gloucester</td>
-                  <td class="text-center">$78,615</td>
-                </tr>
-                <tr>
-                  <td>Jon Porter</td>
-                  <td>Portugal</td>
-                  <td>Gloucester</td>
-                  <td class="text-center">$98,615</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+      <!-- ...existing code... -->
     </div>
   </div>
 </div>
@@ -490,11 +272,309 @@
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
 
+<script src="https://cdn.jsdelivr.net/npm/gridstack@6.0.1/dist/gridstack-all.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+
 <script>
-  $(document).ready(function () {
-    // Javascript method's body can be found in assets/js/demos.js
-    demo.initDashboardPageCharts();
-  });
+    // Widget registry dynamically loaded from Django context
+    window.widgetRegistry = {
+      {% for widget_key, widget in widgets.items %}  // Changed from context.widgets.items to widgets.items
+      "{{ widget_key }}": {
+        id: "{{ widget_key }}",
+        title: "{{ widget.name }}",
+        sourceId: "{{ widget.source_id }}",
+        added: {{ widget.active|lower }},
+        x: {{ widget.position_x }},
+        y: {{ widget.position_y }},
+        w: {{ widget.width }},
+        h: {{ widget.height }},
+        fee: {{ widget.cost }},
+      },
+      {% endfor %}
+    };
+
+    // Global fee tracking
+    window.widget_fee = 0;
+    let grid;
+
+    $(document).ready(function () {
+      initializeGrid();
+      recalculateTotalFee();
+    });
+
+    // Calculate and update total widget fee
+    function recalculateTotalFee() {
+      let totalFee = 0;
+      Object.values(window.widgetRegistry).forEach(widget => {
+        if (widget.added) {
+          totalFee += parseFloat(widget.fee);
+        }
+      });
+
+      window.widget_fee = totalFee;
+      updateSidebarFeeDisplay();
+      console.log("Total widget fee updated:", totalFee.toFixed(2), "CHF/monthly");
+    }
+
+    // Update the sidebar fee display
+    function updateSidebarFeeDisplay() {
+      const feeElement = document.getElementById("widget-fee-display");
+      if (feeElement) {
+        feeElement.textContent = window.widget_fee.toFixed(2) + " CHF/monthly";
+      }
+    }
+
+    // Initialize GridStack and add widgets
+    console.log("Widget registry loaded:", window.widgetRegistry);
+    console.log("Widgets should be displayed if added is true.");
+
+    function initializeGrid() {
+      console.log("Initializing grid...");
+
+      $(".grid-stack").empty();  // Clear previous grid
+      grid = GridStack.init({
+        column: 12,
+        cellHeight: "auto",
+        animate: true,
+        margin: 10,
+        float: false,
+        disableOneColumnMode: false,
+      });
+
+      Object.values(window.widgetRegistry).forEach(widget => {
+        if (widget.added) {
+          addWidgetToGrid(widget);
+        }
+      });
+
+      $(".grid-stack").on("click", ".widget-delete-btn", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        removeWidgetById($(this).data("widget-id"));
+      });
+
+      setTimeout(() => {
+        initializeCharts();
+      }, 500);
+
+      console.log("Grid setup complete");
+    }
+
+    // Function to add a widget to the grid
+    function addWidgetToGrid(widget) {
+      try {
+        console.log("Adding widget:", widget.id);
+        const content = document.getElementById(widget.sourceId)?.innerHTML;
+        if (!content) {
+          console.error("Widget source not found:", widget.sourceId);
+          return false;
+        }
+
+        grid.addWidget({
+          x: widget.x,
+          y: widget.y,
+          w: widget.w,
+          h: widget.h,
+          id: widget.id,
+          content: content,
+        });
+
+        widget.added = true;
+        recalculateTotalFee();
+        return true;
+      } catch (e) {
+        console.error("Error adding widget:", e);
+        return false;
+      }
+    }
+
+    // Remove widget by ID
+    function removeWidgetById(widgetId) {
+    console.log("Removing widget by ID:", widgetId);
+
+    // ✅ Find the widget in the registry
+    const widget = window.widgetRegistry[widgetId];
+
+    if (!widget) {
+        console.warn(`Widget ${widgetId} not found in registry.`);
+        return;
+    }
+
+    // ✅ Find the grid item in the UI
+    const gridItem = document.querySelector(`.grid-stack-item[gs-id="${widgetId}"]`);
+    if (gridItem) {
+        grid.removeWidget(gridItem, false);
+    } else {
+        console.warn(`Could not find grid item with ID: ${widgetId}`);
+    }
+
+    // ✅ Completely remove from registry
+    delete window.widgetRegistry[widgetId];
+    console.log(`Widget ${widgetId} removed from registry.`);
+
+    // ✅ Send AJAX request to Django
+    fetch('/remove_widget/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken() // Ensure CSRF protection
+        },
+        body: JSON.stringify({
+            widget_id: widgetId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("✅ Server Response:", data);
+        if (data.success) {
+            console.log(`Widget ${widgetId} successfully removed from the server.`);
+        } else {
+            console.warn(`Failed to remove widget ${widgetId}:`, data.error);
+        }
+    })
+    .catch(error => {
+        console.error("❌ AJAX Error:", error);
+    });
+
+    // ✅ Update total fee after removing the widget
+    recalculateTotalFee();
+}
+
+
+    // Restore widget function
+    window.restoreWidget = function (widgetTitle) {
+      console.log("Attempting to restore widget:", widgetTitle);
+      const widget = Object.values(window.widgetRegistry).find(w => w.title === widgetTitle);
+      if (widget && !widget.added) {
+        addWidgetToGrid(widget);
+        return true;
+      }
+      return false;
+    };
+
+    // New function to initialize charts
+    function initializeCharts() {
+      console.log("Initializing charts...");
+
+      // Sustainability chart
+      try {
+        const sustainabilityCanvas = document.getElementById("sustainabilityChart");
+        if (sustainabilityCanvas) {
+          const ctx = sustainabilityCanvas.getContext("2d");
+          new Chart(ctx, {
+            type: "line",
+            data: {
+              labels: ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"],
+              datasets: [{
+                label: "Sustainability Score",
+                fill: true,
+                backgroundColor: "rgba(72,72,176,0.1)",
+                borderColor: "#d048b6",
+                data: [60, 65, 63, 68, 70, 71, 69, 72, 75, 76, 75, 77],
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              legend: { display: false }
+            }
+          });
+          console.log("Sustainability chart initialized");
+        }
+      } catch (e) {
+        console.error("Error creating sustainability chart:", e);
+      }
+
+      // Inefficient devices chart
+      try {
+        const inefficientCanvas = document.getElementById("inefficientChart");
+        if (inefficientCanvas) {
+          const ctx = inefficientCanvas.getContext("2d");
+          new Chart(ctx, {
+            type: "bar",
+            data: {
+              labels: ["Server AC", "Printer", "Kitchen", "Lighting"],
+              datasets: [{
+                label: "Inefficiency %",
+                backgroundColor: ["#dc3545", "#ffc107", "#ffc107", "#17a2b8"],
+                data: [87, 62, 58, 45],
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              legend: { display: false }
+            }
+          });
+          console.log("Inefficient chart initialized");
+        }
+      } catch (e) {
+        console.error("Error creating inefficient chart:", e);
+      }
+
+      // Energy blocks chart
+      try {
+        const energyCanvas = document.getElementById("energyBlocksChart");
+        if (energyCanvas) {
+          const ctx = energyCanvas.getContext("2d");
+          new Chart(ctx, {
+            type: "line",
+            data: {
+              labels: ["12AM", "4AM", "8AM", "12PM", "4PM", "8PM"],
+              datasets: [{
+                label: "Energy (kWh)",
+                fill: true,
+                backgroundColor: "rgba(66,134,121,0.15)",
+                borderColor: "#00d6b4",
+                data: [15, 12, 42, 50, 65, 45],
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false
+            }
+          });
+          console.log("Energy blocks chart initialized");
+        }
+      } catch (e) {
+        console.error("Error creating energy blocks chart:", e);
+      }
+
+      // Power consumption chart
+      try {
+        const powerCanvas = document.getElementById("powerConsumptionChart");
+        if (powerCanvas) {
+          const ctx = powerCanvas.getContext("2d");
+          new Chart(ctx, {
+            type: "pie",
+            data: {
+              labels: ["Data Center", "HVAC", "Lighting", "Office Eq."],
+              datasets: [{
+                backgroundColor: ["#ff5722", "#ff9800", "#ffc107", "#ffeb3b"],
+                data: [45.2, 32.8, 15.6, 6.4],
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false
+            }
+          });
+          console.log("Power consumption chart initialized");
+        }
+      } catch (e) {
+        console.error("Error creating power consumption chart:", e);
+      }
+
+      // Initialize other charts similarly...
+      console.log("All charts initialized");
+    }
+
+    function getCSRFToken() {
+      return document.cookie
+          .split('; ')
+          .find(row => row.startsWith('csrftoken='))
+          ?.split('=')[1];
+  }
 </script>
 
 {% endblock javascripts %}
