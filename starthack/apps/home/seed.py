@@ -21,8 +21,8 @@ def create_widgets():
     widgets = [
         {
             'name': 'Sustainability score',
-            'cost': Decimal('5.99'),
-            'source_id': 'sustainability-card-original',
+            'cost': Decimal('200.00'),
+            'source_id': 'sustainability_score',
             'active': True,  # Changed from active_by_default to active
             'position_x': 0,
             'position_y': 0,
@@ -31,8 +31,8 @@ def create_widgets():
         },
         {
             'name': 'Top-k inefficient devices',
-            'cost': Decimal('5.99'),
-            'source_id': 'top-k-inefficient-card-original',
+            'cost': Decimal('200.00'),
+            'source_id': 'top_k_inefficient_devices',
             'active': True,  # Changed from active_by_default to active
             'position_x': 8,
             'position_y': 0,
@@ -41,8 +41,8 @@ def create_widgets():
         },
         {
             'name': 'Energy consumption per day-blocks',
-            'cost': Decimal('5.99'),
-            'source_id': 'energy-day-blocks-card-original',
+            'cost': Decimal('200.00'),
+            'source_id': 'energy_per_block_day',
             'active': True,  # Changed from active_by_default to active
             'position_x': 0,
             'position_y': 5,
@@ -50,9 +50,9 @@ def create_widgets():
             'height': 5
         },
         {
-            'name': 'Top-k power consuming devices',
-            'cost': Decimal('5.99'),
-            'source_id': 'top-k-power-card-original',
+            'name': 'Energy oversight',
+            'cost': Decimal('200.00'),
+            'source_id': 'energy_sight',
             'active': True,  # Changed from active_by_default to active
             'position_x': 4,
             'position_y': 5,
@@ -61,9 +61,9 @@ def create_widgets():
         },
         {
             'name': 'Predictive maintenance alerts',
-            'cost': Decimal('5.99'),
-            'source_id': 'maintenance-card-original',
-            'active': False,  # Changed from active_by_default to active
+            'cost': Decimal('200.00'),
+            'source_id': 'maintenance_devices',
+            'active': True,  # Changed from active_by_default to active
             'position_x': 8,
             'position_y': 5,
             'width': 4,
@@ -71,9 +71,9 @@ def create_widgets():
         },
         {
             'name': 'Device amortization',
-            'cost': Decimal('5.99'),
-            'source_id': 'amortization-card-original',
-            'active': False,  # Changed from active_by_default to active
+            'cost': Decimal('200.00'),
+            'source_id': 'amortization_devices',
+            'active': True,  # Changed from active_by_default to active
             'position_x': 0,
             'position_y': 10,
             'width': 4,
@@ -81,9 +81,9 @@ def create_widgets():
         },
         {
             'name': 'Efficiency metrics',
-            'cost': Decimal('5.99'),
-            'source_id': 'efficiency-card-original',
-            'active': False,  # Changed from active_by_default to active
+            'cost': Decimal('200.00'),
+            'source_id': 'efficiency_devices',
+            'active': True,  # Changed from active_by_default to active
             'position_x': 4,
             'position_y': 10,
             'width': 4,
@@ -91,9 +91,9 @@ def create_widgets():
         },
         {
             'name': 'Energy advisor chatbot',
-            'cost': Decimal('5.99'),
-            'source_id': 'chatbot-card-original',
-            'active': False,  # Changed from active_by_default to active
+            'cost': Decimal('200.00'),
+            'source_id': 'chatbot_advisor',
+            'active': True,  # Changed from active_by_default to active
             'position_x': 8,
             'position_y': 10,
             'width': 4,

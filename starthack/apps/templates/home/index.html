@@ -53,7 +53,7 @@
 
   <!-- Original cards hidden, will be cloned into grid -->
   <div style="display: none">
-    <div id="sustainability-card-original">
+    <div id="sustainability_score">
       <div class="card card-chart position-relative">
         <div class="card-header">
           <h5 class="card-category">ESG Score</h5>
@@ -64,7 +64,7 @@
           <button
             class="btn btn-link btn-danger widget-delete-btn"
             data-widget-id="sustainability-widget"
-            onclick="removeWidgetById('sustainability_score_widget')"
+            onclick="removeWidgetById('sustainability_score')"
           >
             <i class="tim-icons icon-simple-remove"></i>
           </button>
@@ -77,7 +77,8 @@
       </div>
     </div>
 
-    <div id="top-k-inefficient-card-original">
+
+    <div id="top_k_inefficient_devices">
       <div class="card card-chart position-relative">
         <div class="card-header">
           <h5 class="card-category">Efficiency</h5>
@@ -85,9 +86,10 @@
             <i class="tim-icons icon-alert-circle-exc text-warning"></i> Top-k
             inefficient devices
           </h3>
-          <button
+                    <button
             class="btn btn-link btn-danger widget-delete-btn"
-            data-widget-id="inefficient-widget"
+            data-widget-id="top-k-inefficient-widget"
+            onclick="removeWidgetById('top_k_inefficient_devices')"
           >
             <i class="tim-icons icon-simple-remove"></i>
           </button>
@@ -100,7 +102,7 @@
       </div>
     </div>
 
-    <div id="energy-day-blocks-card-original">
+    <div id="energy_per_block_day">
       <div class="card card-chart position-relative">
         <div class="card-header">
           <h5 class="card-category">kWh</h5>
@@ -108,9 +110,10 @@
             <i class="tim-icons icon-bulb-63 text-info"></i> Energy consumption
             per day-blocks
           </h3>
-          <button
+                    <button
             class="btn btn-link btn-danger widget-delete-btn"
-            data-widget-id="energy-blocks-widget"
+            data-widget-id="energy-blocks-day-widget"
+            onclick="removeWidgetById('energy_per_block_day')"
           >
             <i class="tim-icons icon-simple-remove"></i>
           </button>
@@ -123,7 +126,7 @@
       </div>
     </div>
 
-    <div id="top-k-power-card-original">
+    <div id="energy_sight">
       <div class="card card-chart position-relative">
         <div class="card-header">
           <h5 class="card-category">kW</h5>
@@ -131,9 +134,10 @@
             <i class="tim-icons icon-chart-pie-36 text-primary"></i> Top-k power
             consuming devices
           </h3>
-          <button
+                    <button
             class="btn btn-link btn-danger widget-delete-btn"
-            data-widget-id="power-widget"
+            data-widget-id="energy-sight-widget"
+            onclick="removeWidgetById('energy_sight')"
           >
             <i class="tim-icons icon-simple-remove"></i>
           </button>
@@ -146,7 +150,7 @@
       </div>
     </div>
 
-    <div id="maintenance-card-original">
+    <div id="maintenance_devices">
       <div class="card card-chart position-relative">
         <div class="card-header">
           <h5 class="card-category">Risk Level</h5>
@@ -154,9 +158,10 @@
             <i class="tim-icons icon-settings text-danger"></i> Predictive
             maintenance alerts
           </h3>
-          <button
+                    <button
             class="btn btn-link btn-danger widget-delete-btn"
-            data-widget-id="maintenance-widget"
+            data-widget-id="mantainance-devices-widget"
+            onclick="removeWidgetById('manteinance_devices')"
           >
             <i class="tim-icons icon-simple-remove"></i>
           </button>
@@ -169,7 +174,7 @@
       </div>
     </div>
 
-    <div id="amortization-card-original">
+    <div id="amortization_devices">
       <div class="card card-chart position-relative">
         <div class="card-header">
           <h5 class="card-category">CHF</h5>
@@ -177,9 +182,10 @@
             <i class="tim-icons icon-money-coins text-success"></i> Device
             amortization
           </h3>
-          <button
+                    <button
             class="btn btn-link btn-danger widget-delete-btn"
-            data-widget-id="amortization-widget"
+            data-widget-id="amortization-devices-widget"
+            onclick="removeWidgetById('amortization_devices')"
           >
             <i class="tim-icons icon-simple-remove"></i>
           </button>
@@ -192,7 +198,7 @@
       </div>
     </div>
 
-    <div id="efficiency-card-original">
+    <div id="efficiency_devices">
       <div class="card card-chart position-relative">
         <div class="card-header">
           <h5 class="card-category">Performance</h5>
@@ -200,9 +206,10 @@
             <i class="tim-icons icon-chart-bar-32 text-info"></i> Efficiency
             metrics
           </h3>
-          <button
+                    <button
             class="btn btn-link btn-danger widget-delete-btn"
-            data-widget-id="efficiency-widget"
+            data-widget-id="efficiency-devices-widget"
+            onclick="removeWidgetById('efficiency_devices')"
           >
             <i class="tim-icons icon-simple-remove"></i>
           </button>
@@ -215,7 +222,7 @@
       </div>
     </div>
 
-    <div id="chatbot-card-original">
+    <div id="chatbot_advisor">
       <div class="card card-chart position-relative">
         <div class="card-header">
           <h5 class="card-category">Assistant</h5>
@@ -225,8 +232,8 @@
           </h3>
           <button
             class="btn btn-link btn-danger widget-delete-btn"
-            data-widget-id="chatbot-widget"
-            onclick="removeWidgetById('chatbot-widget')"
+            data-widget-id="chatbot-advisor-widget"
+            onclick="removeWidgetById('chatbot_advisor')"
           >
             <i class="tim-icons icon-simple-remove"></i>
           </button>
@@ -388,6 +395,13 @@
       }
     }
 
+    function getCSRFToken() {
+      return document.cookie
+          .split('; ')
+          .find(row => row.startsWith('csrftoken='))
+          ?.split('=')[1];
+  }
+
     // Remove widget by ID
     function removeWidgetById(widgetId) {
     console.log("Removing widget by ID:", widgetId);
@@ -400,17 +414,13 @@
         return;
     }
 
-    // ✅ Find the grid item in the UI
-    const gridItem = document.querySelector(`.grid-stack-item[gs-id="${widgetId}"]`);
+    // ✅ Find and remove the widget from the UI
+    const gridItem = document.querySelector(`[data-widget-id="${widgetId}"]`);
     if (gridItem) {
-        grid.removeWidget(gridItem, false);
+        gridItem.parentElement.removeChild(gridItem);
     } else {
         console.warn(`Could not find grid item with ID: ${widgetId}`);
     }
-
-    // ✅ Completely remove from registry
-    delete window.widgetRegistry[widgetId];
-    console.log(`Widget ${widgetId} removed from registry.`);
 
     // ✅ Send AJAX request to Django
     fetch('/remove_widget/', {
@@ -425,20 +435,20 @@
     })
     .then(response => response.json())
     .then(data => {
-        console.log("✅ Server Response:", data);
         if (data.success) {
-            console.log(`Widget ${widgetId} successfully removed from the server.`);
+            console.log(`✅ Widget ${widgetId} removed successfully.`);
         } else {
-            console.warn(`Failed to remove widget ${widgetId}:`, data.error);
+            console.warn(`⚠️ Failed to remove widget ${widgetId}:`, data.error);
         }
     })
     .catch(error => {
         console.error("❌ AJAX Error:", error);
     });
 
-    // ✅ Update total fee after removing the widget
+    // ✅ Update fee
     recalculateTotalFee();
 }
+
 
 
     // Restore widget function
@@ -569,12 +579,6 @@
       console.log("All charts initialized");
     }
 
-    function getCSRFToken() {
-      return document.cookie
-          .split('; ')
-          .find(row => row.startsWith('csrftoken='))
-          ?.split('=')[1];
-  }
 </script>
 
 {% endblock javascripts %}
