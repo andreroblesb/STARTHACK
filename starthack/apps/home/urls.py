@@ -9,4 +9,5 @@ urlpatterns = [
     path('home/', views.home, name='home'),  # Dashboard index page URL
     path('register/', views.register, name='register'),  # Register page URL
     path('remove-widget/', views.remove_widget, name='remove_widget'),  # Remove widget URL
+    path('add-widget/', views.add_widget, name='add_widget'),  # Add widget URL
 ]

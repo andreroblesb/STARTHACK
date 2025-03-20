@@ -67,8 +67,32 @@ def register(request):
 
 @csrf_exempt  # ⚠️ Use CSRF token instead if possible
 def remove_widget(request):
+    try:
+        data = json.loads(request.body)
+        widget_id = data.get("widget_id")
+
+        if not widget_id:
+            return JsonResponse({"success": False, "error": "No widget_id provided"}, status=400)
+
+        widget = Widget.objects.filter(source_id=widget_id).first()
+
+        if not widget:
+            return JsonResponse({"success": False, "error": "Widget not found"}, status=404)
+
+        # ✅ Deactivate the widget instead of deleting it
+        widget.active = False
+        widget.save()
+
+        return JsonResponse({"success": True, "message": f"Widget {widget_id} removed."})
+    
+    except json.JSONDecodeError:
+        return JsonResponse({"success": False, "error": "Invalid JSON"}, status=400)
+    
+    except Exception as e:
+        return JsonResponse({"success": False, "error": str(e)}, status=500)
+
+def add_widget(request):
     if request.method == "POST":
-        print("you actually called it")
         try:
             data = json.loads(request.body)  # Parse JSON from AJAX request
             widget_id = data.get("widget_id")
@@ -79,10 +103,10 @@ def remove_widget(request):
             widget = Widget.objects.filter(source_id=widget_id).first()
 
             if widget:
-                widget.active = False  # ✅ Deactivate the widget
+                widget.active = True  # ✅ Activate the widget
                 widget.save()
 
-                return JsonResponse({"success": True, "message": f"Widget {widget_id} removed."})
+                return JsonResponse({"success": True, "message": f"Widget {widget_id} added."})
             else:
                 return JsonResponse({"success": False, "error": "Widget not found."}, status=404)
         except Exception as e:
