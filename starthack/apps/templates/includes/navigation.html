@@ -1,0 +1,290 @@
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-absolute navbar-transparent">
+  <div class="container-fluid">
+    <div class="navbar-wrapper">
+      <div class="navbar-toggle d-inline">
+        <button type="button" class="navbar-toggler">
+          <span class="navbar-toggler-bar bar1"></span>
+          <span class="navbar-toggler-bar bar2"></span>
+          <span class="navbar-toggler-bar bar3"></span>
+        </button>
+      </div>
+      <a class="navbar-brand" href="javascript:void(0)">Bellisense dashboard</a>
+      <i class="tim-icons icon-chart-pie-36"></i>
+    </div>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navigation"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-bar navbar-kebab"></span>
+      <span class="navbar-toggler-bar navbar-kebab"></span>
+      <span class="navbar-toggler-bar navbar-kebab"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navigation">
+      <ul class="navbar-nav ml-auto">
+        <li class="input-group d-flex align-items-center mb-0">
+          <label class="switch theme-switch">
+            <input type="checkbox" class="bsc" checked="" />
+            <span class="slider"></span>
+          </label>
+        </li>
+        <li class="search-bar input-group">
+          <button
+            class="btn btn-link"
+            id="search-button"
+            data-toggle="modal"
+            data-target="#searchModal"
+          >
+            <i class="tim-icons icon-zoom-split"></i>
+            <span class="d-lg-none d-md-block">Search</span>
+          </button>
+        </li>
+        <li class="dropdown nav-item">
+          <a
+            href="javascript:void(0)"
+            class="dropdown-toggle nav-link"
+            data-toggle="dropdown"
+          >
+            <div class="notification d-none d-lg-block d-xl-block"></div>
+            <i class="tim-icons icon-sound-wave"></i>
+            <p class="d-lg-none">Notifications</p>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-right dropdown-navbar">
+            <li class="nav-link">
+              <a href="#" class="nav-item dropdown-item"
+                >Mike John responded to your email</a
+              >
+            </li>
+            <li class="nav-link">
+              <a href="javascript:void(0)" class="nav-item dropdown-item"
+                >You have 5 more tasks</a
+              >
+            </li>
+            <li class="nav-link">
+              <a href="javascript:void(0)" class="nav-item dropdown-item"
+                >Your friend Michael is in town</a
+              >
+            </li>
+            <li class="nav-link">
+              <a href="javascript:void(0)" class="nav-item dropdown-item"
+                >Another notification</a
+              >
+            </li>
+            <li class="nav-link">
+              <a href="javascript:void(0)" class="nav-item dropdown-item"
+                >Another one</a
+              >
+            </li>
+          </ul>
+        </li>
+        <li class="dropdown nav-item">
+          <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+            <div class="photo">
+              <img src="{{ ASSETS_ROOT }}/img/anime3.png" alt="Profile Photo" />
+            </div>
+            <b class="caret d-none d-lg-block d-xl-block"></b>
+            <p class="d-lg-none">Log out</p>
+          </a>
+          <ul class="dropdown-menu dropdown-navbar">
+            <li class="nav-link">
+              <a href="/user.html" class="nav-item dropdown-item">Profile</a>
+            </li>
+            <li class="dropdown-divider"></li>
+            <li class="nav-link">
+              <a href="{% url 'login' %}" class="nav-item dropdown-item"
+                >Logout</a
+              >
+            </li>
+          </ul>
+        </li>
+        <li class="separator d-lg-none"></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div
+  class="modal modal-search fade"
+  id="searchModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="searchModal"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <input
+          type="text"
+          class="form-control"
+          id="searchInput"
+          placeholder="Search widget . . ."
+          autocomplete="off"
+        />
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <i class="tim-icons icon-simple-remove"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="searchResults" class="small-search-results">
+          <!-- Search results will be dynamically inserted here -->
+        </div>
+      </div>
+      <style>
+        .small-search-results {
+          font-size: 0.85rem;
+          max-height: 300px;
+          overflow-y: auto;
+        }
+        .small-search-results .search-item {
+          padding: 8px !important;
+          margin: 4px 0;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 4px;
+          background-color: rgba(0, 0, 0, 0.2);
+          transition: background-color 0.2s;
+        }
+        .small-search-results .search-item:hover {
+          background-color: rgba(0, 0, 0, 0.4);
+        }
+        .small-search-results .btn-sm {
+          padding: 0.25rem 0.5rem;
+          font-size: 0.75rem;
+        }
+        .small-search-results .search-item span {
+          line-height: 1.2;
+        }
+      </style>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const searchInput = document.getElementById("searchInput");
+      const searchResults = document.getElementById("searchResults");
+
+      // Function to get all widget definitions from the registry
+      function getWidgetDefinitions() {
+        if (window.widgetRegistry) {
+          return Object.values(window.widgetRegistry).map((widget) => ({
+            title: widget.title,
+            id: widget.id,
+          }));
+        }
+
+        // Fallback for when window.widgetRegistry is not available
+        return [
+          { title: "Sustainability score", id: "sustainability-widget" },
+          { title: "Top-k inefficient devices", id: "inefficient-widget" },
+          {
+            title: "Energy consumption per day-blocks",
+            id: "energy-blocks-widget",
+          },
+          { title: "Top-k power consuming devices", id: "power-widget" },
+          { title: "Predictive maintenance alerts", id: "maintenance-widget" },
+          { title: "Device amortization", id: "amortization-widget" },
+          { title: "Efficiency metrics", id: "efficiency-widget" },
+          { title: "Energy advisor chatbot", id: "chatbot-widget" },
+        ];
+      }
+
+      // Function to check widget active status
+      function isWidgetActive(widgetId) {
+        return (
+          window.widgetRegistry &&
+          window.widgetRegistry[widgetId] &&
+          window.widgetRegistry[widgetId].added
+        );
+      }
+
+      // Function to filter and display search results
+      function updateSearchResults() {
+        const query = searchInput.value.toLowerCase().trim();
+        searchResults.innerHTML = ""; // Clear previous results
+
+        if (query === "") {
+          return; // Don't show results when input is empty
+        }
+
+        const widgets = getWidgetDefinitions();
+        const filteredWidgets = widgets.filter((widget) =>
+          widget.title.toLowerCase().includes(query)
+        );
+
+        if (filteredWidgets.length === 0) {
+          searchResults.innerHTML =
+            '<div class="text-center py-3">No widgets found</div>';
+          return;
+        }
+
+        // Display matching widgets
+        filteredWidgets.forEach((widget) => {
+          const active = isWidgetActive(widget.id);
+
+          const item = document.createElement("div");
+          item.className =
+            "search-item d-flex justify-content-between align-items-center";
+
+          const title = document.createElement("span");
+          title.textContent = widget.title;
+
+          const button = document.createElement("button");
+          button.className = `btn btn-sm ${
+            active ? "btn-secondary" : "btn-success"
+          }`;
+          button.innerHTML = active
+            ? `<i class="tim-icons icon-check-2"></i> Active`
+            : `<i class="tim-icons icon-simple-add"></i> Add`;
+
+          // Only enable the button if widget is not active
+          if (!active) {
+            button.onclick = function () {
+              addWidget(widget.title);
+            };
+          } else {
+            button.disabled = true;
+          }
+
+          item.appendChild(title);
+          item.appendChild(button);
+          searchResults.appendChild(item);
+        });
+      }
+
+      // Function to add widget to dashboard
+      function addWidget(widgetTitle) {
+        // Close modal
+        $("#searchModal").modal("hide");
+
+        // Restore widget on dashboard
+        if (window.restoreWidget) {
+          setTimeout(() => {
+            const result = window.restoreWidget(widgetTitle);
+            console.log(`Widget ${widgetTitle} restoration result:`, result);
+          }, 300);
+        } else {
+          console.error("restoreWidget function not available");
+        }
+      }
+
+      // Attach event listener to search input
+      searchInput.addEventListener("keyup", updateSearchResults);
+
+      // Clear input when modal opens
+      $("#searchModal").on("shown.bs.modal", function () {
+        searchInput.value = "";
+        searchResults.innerHTML = "";
+        searchInput.focus();
+      });
+    });
+  </script>
+</div>
+<!-- End Navbar -->

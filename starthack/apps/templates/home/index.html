@@ -1,0 +1,1009 @@
+{% extends "layouts/base.html" %} {% block title %} Bellisense dashboard {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %} {% load static %}
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/gridstack@6.0.1/dist/gridstack.min.css"
+/>
+<style>
+    .grid-stack-item {
+      border-radius: 5px;
+      overflow: hidden;
+      margin-bottom: 0 !important;  /* Remove bottom margin */
+    }
+    .grid-stack {
+      margin-top: 0;  /* Remove top margin */
+      background: none;
+    }
+    .grid-stack > .grid-stack-item > .grid-stack-item-content {
+      inset: 2px !important;  /* Reduce the padding around items */
+      border-radius: 5px;
+    }
+    .grid-stack > .grid-stack-item {
+      min-height: 50px !important;  /* Reduce minimum height */
+      margin: 0 !important;  /* Remove margins */
+    }
+    .grid-stack-item.ui-draggable-dragging {
+      z-index: 9999 !important;
+    }
+    /* Improved delete button styling */
+    .widget-delete-btn {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 10;
+    }
+    .card-header:hover .widget-delete-btn {
+      opacity: 1;
+    }
+    /* Chat styling */
+    .message {
+      margin-bottom: 10px;
+      border-radius: 8px;
+      padding: 8px 12px;
+    }
+
+    .message.bot {
+      background-color: rgba(66, 134, 121, 0.15);
+      margin-right: 20%;
+    }
+
+    .message.user {
+      background-color: rgba(34, 42, 66, 0.85);
+      margin-left: 20%;
+      color: white;
+    }
+
+    .chat-input-container {
+      margin-top: auto;
+      padding-top: 10px;
+    }
+    .row {
+              display: flex;
+              justify-content: center;
+              text-justify: distribute-all-lines;
+              gap: 40px;
+              margin: 10px 0;
+          }
+          .cell {
+              width: 100px;
+              text-align: center;
+              color: aliceblue;
+          }
+          hr {
+              border: none;
+              border-top: 1px solid lightblue;
+              margin: 5px auto;
+              width: 60%;
+          }
+</style>
+{% endblock stylesheets %} {% block content %}
+<body>
+  <div class="content">
+    <!-- Energy performance chart - full width -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card card-chart">
+          <!-- ...existing code... -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid Stack Container -->
+    <div class="row">
+      <div class="col-12">
+        <div class="grid-stack"></div>
+      </div>
+    </div>
+
+    <!-- Original cards hidden, will be cloned into grid -->
+    <div style="display: none">
+      <div id="sustainability_score">
+        <div class="card card-chart position-relative">
+          <div class="card-header">
+            <h5 class="card-category">(0-100)</h5>
+            <h3 class="card-title">
+              <i class="tim-icons icon-earth-2 text-success"></i> Sustainability
+              score of system devices
+            </h3>
+            <button
+              class="btn btn-link btn-danger widget-delete-btn"
+              data-widget-id="sustainability_score"
+              onclick="removeWidgetById('sustainability_score')"
+            >
+              <i class="tim-icons icon-simple-remove"></i>
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="chart-area">
+              <canvas id="sustainabilityChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="top_k_inefficient_devices">
+        <div class="card card-chart position-relative">
+          <div class="card-header">
+            <h5 class="card-category">Consumption per hour</h5>
+            <h3 class="card-title">
+              <i class="tim-icons icon-alert-circle-exc text-warning"></i> Top-k
+              inefficient devices
+            </h3>
+            <button
+              class="btn btn-link btn-danger widget-delete-btn"
+              data-widget-id="top-k-inefficient-widget"
+              onclick="removeWidgetById('top_k_inefficient_devices')"
+            >
+              <i class="tim-icons icon-simple-remove"></i>
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="chart-area">
+              <canvas id="inefficientChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="energy_per_block_day">
+        <div class="card card-chart position-relative">
+          <div class="card-header">
+            <h5 class="card-category">kWh</h5>
+            <h3 class="card-title">
+              <i class="tim-icons icon-bulb-63 text-info"></i> Energy
+              consumption per day blocks
+            </h3>
+            <button
+              class="btn btn-link btn-danger widget-delete-btn"
+              data-widget-id="energy-blocks-day-widget"
+              onclick="removeWidgetById('energy_per_block_day')"
+            >
+              <i class="tim-icons icon-simple-remove"></i>
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="chart-area">
+              <canvas id="energyBlocksChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="energy_sight">
+        <div class="card card-chart position-relative">
+          <div class="card-header">
+            <h5 class="card-category">kW</h5>
+            <h3 class="card-title">
+              <i class="tim-icons icon-chart-pie-36 text-primary"></i> Top-k
+              power consuming devices
+            </h3>
+            <button
+              class="btn btn-link btn-danger widget-delete-btn"
+              data-widget-id="energy-sight-widget"
+              onclick="removeWidgetById('energy_sight')"
+            >
+              <i class="tim-icons icon-simple-remove"></i>
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="chart-area">
+              <canvas id="powerConsumptionChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="maintenance_devices">
+        <div class="card card-chart position-relative">
+          <div class="card-header">
+            <h5 class="card-category">Risk Level</h5>
+            <h3 class="card-title">
+              <i class="tim-icons icon-settings text-danger"></i> Predictive
+              maintenance alerts
+            </h3>
+            <button
+              class="btn btn-link btn-danger widget-delete-btn"
+              data-widget-id="mantainance-devices-widget"
+              onclick="removeWidgetById('manteinance_devices')"
+            >
+              <i class="tim-icons icon-simple-remove"></i>
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="chart-area">
+              <div>
+                <img
+                  src="{% static 'images/maintenance.png' %}"
+                  alt="Maintenance"
+                />
+                <canvas id="maintenanceChart"></canvas>
+                          
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="amortization_devices">
+        <div class="card card-chart position-relative">
+          <div class="card-header">
+            <h5 class="card-category">0.00-1.00</h5>
+            <h3 class="card-title">
+              <i class="tim-icons icon-money-coins text-success"></i> CSR Leaderboard
+            </h3>
+            <button
+              class="btn btn-link btn-danger widget-delete-btn"
+              data-widget-id="amortization-devices-widget"
+              onclick="removeWidgetById('amortization_devices')"
+            >
+              <i class="tim-icons icon-simple-remove"></i>
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="chart-area">
+              <div class="row">
+                <strong> Belimo system holder </strong><strong>Efficiency ranking</strong>
+              </div>
+              <hr />
+              <div class="row">
+                <div class="cell">PWC</div>
+                <div class="cell">1st</div>
+              </div>
+              <hr />
+              <div class="row">
+                <div class="cell">KO</div>
+                <div class="cell">2nd</div>
+              </div>
+              <hr />
+              <div class="row">
+                <div class="cell">SBUX</div>
+                <div class="cell">3rd</div>
+              </div>
+              <hr />
+              <div class="row">
+                <div class="cell">KPMG</div>
+                <div class="cell">4th</div>
+              </div>
+              <hr />
+                <div class="row">
+                <div class="cell" style="color: #28a745">You</div>
+                <div class="cell" style="color: #28a745">16th</div>
+                </div>  
+              <hr />
+              <canvas id="amortizationChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="efficiency_devices">
+        <div class="card card-chart position-relative">
+          <div class="card-header">
+            <h5 class="card-category">Performance</h5>
+            <h3 class="card-title">
+              <i class="tim-icons icon-chart-bar-32 text-info"></i> Efficiency
+              metrics
+            </h3>
+            <button
+              class="btn btn-link btn-danger widget-delete-btn"
+              data-widget-id="efficiency-devices-widget"
+              onclick="removeWidgetById('efficiency_devices')"
+            >
+              <i class="tim-icons icon-simple-remove"></i>
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="chart-area">
+              <canvas id="efficiencyChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="chatbot_advisor">
+        <div class="card card-chart position-relative">
+          <div class="card-header">
+            <h5 class="card-category">AI assistent</h5>
+            <h3 class="card-title">
+              <i class="tim-icons icon-chat-33 text-primary"></i> Make use of AI & data-driven recommendations to increase Bilemo's HVAS systems to the next level
+            </h3>
+            <button
+              class="btn btn-link btn-danger widget-delete-btn"
+              data-widget-id="chatbot-advisor-widget"
+              onclick="removeWidgetById('chatbot_advisor')"
+            >
+              <i class="tim-icons icon-simple-remove"></i>
+            </button>
+          </div>
+          <div
+            class="card-body d-flex flex-column"
+            style="height: 100%; padding: 15px"
+          >
+            <div class="chat-container d-flex flex-column">
+              <div
+                class="chat-messages flex-grow-1 mb-3"
+                id="chatMessages"
+                style="min-height: 150px"
+              >
+                <div class="message bot p-2 mb-2 rounded">
+                  Hello! I can help you with:
+                  <ul class="mt-2 mb-0">
+                    <li>Energy consumption analysis</li>
+                    <li>Efficiency recommendations</li>
+                    <li>Cost saving strategies</li>
+                    <li>Maintenance scheduling</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="chat-input-container">
+                <div class="input-group">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="chatInput"
+                    placeholder="Ask about energy efficiency..."
+                    onkeypress="handleKeyPress(event)"
+                  />
+                  <div class="input-group-append">
+                    <button class="btn btn-primary" onclick="sendChatMessage()">
+                      <i class="tim-icons icon-send"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="actual_amortization">
+        <div class="card card-chart position-relative">
+          <div class="card-header">
+        <h5 class="card-category">Coming soon... NOT YET AVAILABLE</h5>
+        <h3 class="card-title">
+          <i class="tim-icons icon-chat-33 text-primary"></i> Belimo device amortization forecast
+        </h3>
+        <button
+          class="btn btn-link btn-danger widget-delete-btn"
+          data-widget-id="actual_amortization-widget"
+          onclick="removeWidgetById('actual_amortization')"
+        >
+          <i class="tim-icons icon-simple-remove"></i>
+        </button>
+          </div>
+          <div
+        class="card-body d-flex flex-column"
+        style="height: 100%; padding: 15px"
+          >
+        <div class="chat-container d-flex flex-column">
+          <div
+            class="chat-messages flex-grow-1 mb-3"
+            id="chatMessages"
+            style="min-height: 150px"
+          >
+            <div class="message bot p-2 mb-2 rounded">
+          Looking for the best amortization strategy? Just wait until your raw analytics, provided by your Belimo system, are transformed into actual finantial forecasts.
+            </div>
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="3_dimensional_optimization">
+        <div class="card card-chart position-relative">
+          <div class="card-header">
+            <h5 class="card-category">Coming soon... NOT YET AVAILABLE</h5>
+            <h3 class="card-title">
+              <i class="tim-icons icon-chat-33 text-danger"></i> 3-dimensional optimization  with fluid analysis software.
+            </h3>
+            <button
+              class="btn btn-link btn-danger widget-delete-btn"
+              data-widget-id="3-dimensional-optimization-widget"
+              onclick="removeWidgetById('3_dimensional_optimization')"
+            >
+              <i class="tim-icons icon-simple-remove"></i>
+            </button>
+          </div>
+          <div
+            class="card-body d-flex flex-column"
+            style="height: 100%; padding: 15px"
+          >
+            <div class="chat-container d-flex flex-column">
+              <div
+                class="chat-messages flex-grow-1 mb-3"
+                id="chatMessages"
+                style="min-height: 150px"
+              >
+                <div class="message bot p-2 mb-2 rounded">
+                    <img src="{% static 'images/teaser.gif' %}" alt="3D Earth" style="width: 100%; height: auto; max-width: 300px; display: block; margin: 0 auto;">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rest of the bottom section -->
+    <div class="row">
+      <div class="col-lg-6 col-md-12">
+        <!-- ...existing code... -->
+      </div>
+      <div class="col-lg-6 col-md-12">
+        <!-- ...existing code... -->
+      </div>
+    </div>
+  </div>
+
+  {% endblock content %}
+
+  <!-- Specific Page JS goes HERE  -->
+  {% block javascripts %}
+
+  <script src="https://cdn.jsdelivr.net/npm/gridstack@6.0.1/dist/gridstack-all.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+
+  <script>
+      // Widget registry dynamically loaded from Django context
+      window.widgetRegistry = {
+          {% for widget_key, widget in widgets.items %}
+          "{{ widget.source_id }}": {  // Changed from widget_key to widget.source_id
+              id: "{{ widget.source_id }}",
+              title: "{{ widget.name }}",
+              sourceId: "{{ widget.source_id }}",
+              added: {{ widget.active|lower }},
+              x: {{ widget.position_x }},
+              y: {{ widget.position_y }},
+              w: {{ widget.width }},
+              h: {{ widget.height }},
+              fee: {{ widget.cost }},
+          },
+          {% endfor %}
+      };
+
+      // Global fee tracking
+      window.widget_fee = 0;
+      let grid;
+
+      $(document).ready(function () {
+        initializeGrid();
+      });
+
+      // Initialize GridStack and add widgets
+      console.log("Widget registry loaded:", window.widgetRegistry);
+      console.log("Widgets should be displayed if added is true.");
+
+      function initializeGrid() {
+        console.log("Initializing grid...");
+
+        $(".grid-stack").empty();  // Clear previous grid
+        grid = GridStack.init({
+          column: 12,
+          cellHeight: 80,
+          animate: true,
+          margin: 2,  // Minimal margin between widgets
+          marginTop: 2,  // Minimal top margin
+          marginBottom: 2,  // Minimal bottom margin
+          verticalMargin: 2,  // Add this to control vertical spacing
+          float: false,
+          disableOneColumnMode: false,
+          // Add these settings to control spacing
+          minRow: 1,
+          cellHeightUnit: 'px',
+          verticalMarginUnit: 'px'
+        });
+
+        Object.values(window.widgetRegistry).forEach(widget => {
+          if (widget.added) {
+            addWidgetToGrid(widget);
+            updateWidgetStatus(widget.sourceId, true);
+          }
+        });
+
+        $(".grid-stack").on("click", ".widget-delete-btn", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          removeWidgetById($(this).data("widget-id"));
+        });
+
+        setTimeout(() => {
+          initializeCharts();
+        }, 500);
+
+        console.log("Grid setup complete");
+      }
+
+      // Function to add a widget to the grid
+      function addWidgetToGrid(widget) {
+          try {
+              console.log("Adding widget:", widget);
+              const content = document.getElementById(widget.sourceId)?.innerHTML;
+              if (!content) {
+                  console.error("Widget source not found:", widget.sourceId);
+                  return false;
+              }
+
+              // Check if widget is already in grid
+              const existingWidget = grid.engine.nodes.find(n => n.id === widget.sourceId);
+              if (existingWidget) {
+                  console.log("Widget already exists in grid:", widget.sourceId);
+                  return false;
+              }
+
+              // Add widget to grid
+              grid.addWidget({
+                  x: widget.x,
+                  y: widget.y,
+                  w: widget.w,
+                  h: widget.h,
+                  id: widget.sourceId,  // Use sourceId as the grid item ID
+                  content: content,
+              });
+
+              // Update widget status in database
+              fetch('/add_widget/', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                      'X-CSRFToken': getCSRFToken()
+                  },
+                  body: JSON.stringify({
+                      widget_id: widget.sourceId
+                  })
+              })
+              .then(response => response.json())
+              .then(data => {
+                    if (data.success) {
+                      console.log(`Widget ${widget.sourceId} activated successfully`);
+                      window.widgetRegistry[widget.sourceId].added = true;
+                      // Update the UI to reflect the change
+                      updateWidgetStatus(widget.sourceId, true);
+                          // Check if page has already been reloaded
+                      if (!sessionStorage.getItem("widgetReloaded")) {
+                          sessionStorage.setItem("widgetReloaded", "true");
+                          window.location.reload();
+                      }
+                      console.error("Failed to activate widget:", data.error);
+                      grid.removeWidget(grid.engine.nodes.find(n => n.id === widget.sourceId));
+                  }
+              })
+              .catch(error => {
+                  console.error("Error updating widget status:", error);
+                  grid.removeWidget(grid.engine.nodes.find(n => n.id === widget.sourceId));
+              });
+
+              return true;
+          } catch (e) {
+              console.error("Error adding widget:", e);
+              return false;
+          }
+      }
+
+      function getCSRFToken() {
+        return document.cookie
+            .split('; ')
+            .find(row => row.startsWith('csrftoken='))
+            ?.split('=')[1];
+      }
+
+      // Remove widget by ID
+      function removeWidgetById(widgetId) {
+          console.log("Removing widget:", widgetId);
+
+          // Find the widget element
+          const gridItem = document.querySelector(`.grid-stack-item[gs-id="${widgetId}"]`);
+          if (!gridItem) {
+              console.warn("Grid item not found:", widgetId);
+              return;
+          }
+
+          // Fade out animation
+          gridItem.style.transition = 'opacity 0.3s';
+          gridItem.style.opacity = '0';
+
+          // After animation, remove from grid and update registry
+          setTimeout(() => {
+              // Remove from GridStack
+              grid.removeWidget(gridItem);
+
+              // Update widget registry
+              if (window.widgetRegistry[widgetId]) {
+                  window.widgetRegistry[widgetId].added = false;
+              }
+
+              // Send AJAX request to update server
+              fetch('/remove_widget/', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                      'X-CSRFToken': getCSRFToken()
+                  },
+                  body: JSON.stringify({
+                      widget_id: widgetId
+                  })
+              })
+              .then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      console.log(`Widget ${widgetId} deactivated successfully`);
+                  } else {
+                      console.error("Failed to deactivate widget:", data.error);
+                  }
+              })
+              .catch(error => {
+                  console.error("Error updating widget status:", error);
+              });
+
+          }, 300); // Wait for fade out animation
+      }
+
+      // Function to update widget status in UI
+      function updateWidgetStatus(widgetId, isActive) {
+          const widgetElement = document.querySelector(`[data-widget-id="${widgetId}"]`);
+          if (widgetElement) {
+              if (isActive) {
+                  widgetElement.classList.add('active');
+                  widgetElement.textContent = 'Remove';
+              } else {
+                  widgetElement.classList.remove('active');
+                  widgetElement.textContent = 'Add';
+              }
+          }
+      }
+
+      // Restore widget function
+      window.restoreWidget = function (widgetTitle) {
+          console.log("Attempting to restore widget:", widgetTitle);
+          const widget = Object.values(window.widgetRegistry).find(w => w.title === widgetTitle);
+          if (widget && !widget.added) {
+            addWidgetToGrid(widget);
+            return true;
+          }
+          return false;
+      };
+
+      // New function to initialize charts
+      function initializeCharts() {
+        console.log("Initializing charts...");
+
+        // Sustainability chart
+        try {
+          const sustainabilityCanvas = document.getElementById("sustainabilityChart");
+          if (sustainabilityCanvas) {
+            const ctx = sustainabilityCanvas.getContext("2d");
+            new Chart(ctx, {
+              type: "bar",
+              data: {
+                labels: JSON.parse('{{ top_sustainable_devices.labels|safe }}'),
+                datasets: [{
+                  label: "Sustainability Score",
+                  backgroundColor: ["#28a745", "#20c997", "#17a2b8", "#2ecc71"],
+                  data: JSON.parse('{{ top_sustainable_devices.scores|safe }}')
+                }]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                  yAxes: [{
+                    ticks: {
+                      beginAtZero: true,
+                      max: 100
+                    }
+                  }]
+                },
+                legend: { display: false }
+              }
+            });
+            console.log("Sustainability chart initialized");
+          }
+        } catch (e) {
+          console.error("Error creating sustainability chart:", e);
+      }
+
+        // Inside initializeCharts function, update the inefficient devices chart section
+        try {
+            const inefficientCanvas = document.getElementById("inefficientChart");
+            if (inefficientCanvas) {
+                const ctx = inefficientCanvas.getContext("2d");
+
+                // Get the data directly (no need for JSON.parse)
+                const labels = {{ inefficient_devices.labels|safe }};
+                const scores = {{ inefficient_devices.scores|safe }};
+
+                console.log("Inefficient devices data:", { labels, scores });
+
+                new Chart(ctx, {
+                    type: "bar",
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: "Power consumption (kWh) / hr",
+                            backgroundColor: [
+                                "#dc3545",  // Red
+                                "#ff9800",  // Orange
+                                "#ffc107",  // Yellow
+                                "#17a2b8",  // Blue
+                                "#28a745"   // Green
+                            ],
+                            data: scores
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                },
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Pow. consumption (kWh) / hr'
+                                }
+                            }]
+                        },
+                        legend: { display: false }
+                    }
+                });
+                console.log("Inefficient devices chart initialized");
+            }
+        } catch (e) {
+            console.error("Error creating inefficient devices chart:", e);
+            console.error("Data:", {
+                labels: {{ inefficient_devices.labels|safe }},
+                scores: {{ inefficient_devices.scores|safe }}
+            });
+        }
+
+        // random forest failure probability
+        try {
+          const energyCanvas = document.getElementById("energyBlocksChart");
+          if (energyCanvas) {
+            const ctx = energyCanvas.getContext("2d");
+            new Chart(ctx, {
+              type: "line",
+              data: {
+                labels: ["12AM", "4AM", "8AM", "12PM", "4PM", "8PM"],
+                datasets: [{
+                  label: "Energy (kWh)",
+                  fill: true,
+                  backgroundColor: "rgba(66,134,121,0.15)",
+                  borderColor: "#00d6b4",
+                  data: [15, 12, 42, 50, 65, 45],
+                }]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false
+              }
+            });
+            console.log("Energy blocks chart initialized");
+          }
+        } catch (e) {
+          console.error("Error creating energy blocks chart:", e);
+        }
+
+        // Power consumption chart
+        try {
+          const powerCanvas = document.getElementById("powerConsumptionChart");
+          if (powerCanvas) {
+            const ctx = powerCanvas.getContext("2d");
+            new Chart(ctx, {
+              type: "pie",
+              data: {
+                labels: ["Data Center", "HVAC", "Lighting", "Office Eq."],
+                datasets: [{
+                  backgroundColor: ["#ff5722", "#ff9800", "#ffc107", "#ffeb3b"],
+                  data: [45.2, 32.8, 15.6, 6.4],
+                }]
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false
+              }
+            });
+            console.log("Power consumption chart initialized");
+          }
+        } catch (e) {
+          console.error("Error creating power consumption chart:", e);
+        }
+
+        // efficiency chart
+        try {
+          const efficiencyCanvas = document.getElementById("efficiencyChart");
+          if (efficiencyCanvas) {
+            const ctx = efficiencyCanvas.getContext("2d");
+
+            // Get the data from Django context
+            const labels = {{ efficiency_data.labels|safe }};
+            const actualScores = {{ efficiency_data.actual_scores|safe }};
+            const predictedScores = {{ efficiency_data.predicted_scores|safe }};
+
+            console.log("Efficiency data received:", {
+                labels: labels,
+                actual: actualScores,
+                predicted: predictedScores
+            });
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Actual Efficiency',
+                            data: actualScores,
+                            borderColor: '#ff6384',
+                            backgroundColor: 'rgba(255,99,132,0.1)',
+                            fill: false,
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Predicted Efficiency',
+                            data: predictedScores,
+                            borderColor: '#00d6b4',
+                            backgroundColor: 'rgba(0,214,180,0.1)',
+                            fill: false,
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Time (hrs l/ day)'
+                            }
+                        }],
+                        yAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Efficiency (T△ in/out K)'
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+    } catch (e) {
+        console.error("Error creating efficiency chart:", e);
+    }
+
+      }
+  </script>
+  <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const chatInput = document.getElementById("chatInput");
+          const chatMessages = document.getElementById("chatMessages");
+          const chatSendButton = document.querySelector(
+            "#chatbot_advisor .btn-primary"
+          );
+
+          if (!chatInput || !chatMessages || !chatSendButton) {
+            console.error("🚨 Missing chatbot elements in DOM!");
+            return;
+          }
+
+          // Handle button click
+          chatSendButton.addEventListener("click", function (e) {
+            e.preventDefault(); // Prevent form submission
+            sendChatMessage();
+          });
+
+          // Handle Enter key press
+          chatInput.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+              e.preventDefault(); // Prevent new line in input
+              sendChatMessage();
+            }
+          });
+        });
+
+        // Function to send user message and receive bot response
+        function sendChatMessage() {
+        console.log("✅ sendChatMessage() function is running"); // Debug log
+
+        const input = document.getElementById("chatInput");
+        const messages = document.getElementById("chatMessages");
+        const text = input.value.trim();
+
+        console.log("User input:", text); // Debug log
+
+        if (!text) {
+            console.warn("⚠️ No input provided!"); // Warning log
+            return;
+        }
+
+        // Add user message to the chat
+        const userMessage = document.createElement("div");
+        userMessage.className = "message user";
+        userMessage.textContent = text;
+        messages.appendChild(userMessage);
+        console.log("✅ User message added to chat!");
+
+        // Clear input
+        input.value = "";
+
+        // Auto-scroll
+        messages.scrollTop = messages.scrollHeight;
+
+        // Simulate bot response
+        setTimeout(() => {
+            console.log("✅ Bot response triggered");
+            const botMessage = document.createElement("div");
+            botMessage.className = "message bot";
+            botMessage.textContent = getBotResponse(text);
+            messages.appendChild(botMessage);
+            console.log("✅ Bot message added to chat!");
+
+            // Auto-scroll again after bot response
+            messages.scrollTop = messages.scrollHeight;
+        }, 1000);
+    }
+
+          // Add user message
+          const userMessage = document.createElement("div");
+          userMessage.className = "message user";
+          userMessage.textContent = text;
+          messages.appendChild(userMessage);
+
+          // Clear input
+          input.value = "";
+
+          // Auto-scroll to the latest message
+          messages.scrollTop = messages.scrollHeight;
+
+          // Simulate bot response
+          setTimeout(() => {
+            const botMessage = document.createElement("div");
+            botMessage.className = "message bot";
+            botMessage.textContent = getBotResponse(text);
+            messages.appendChild(botMessage);
+
+            // Auto-scroll again after bot response
+            messages.scrollTop = messages.scrollHeight;
+          }, 1000);
+        }
+
+        // Function to generate bot response based on user input
+        function getBotResponse(text) {
+          const responses = {
+            consumption:
+              "Your energy consumption has increased by 15% compared to last month.",
+            efficiency:
+              "Consider upgrading to LED lighting and optimizing HVAC schedules.",
+            cost: "Implementing our recommendations could save you 25% on energy costs.",
+            maintenance: "Next scheduled maintenance: HVAC inspection in 5 days.",
+            help: "I can assist with energy consumption analysis, efficiency recommendations, and cost-saving strategies.",
+          };
+
+          text = text.toLowerCase();
+          if (text.includes("consumption")) return responses.consumption;
+          if (text.includes("efficiency")) return responses.efficiency;
+          if (text.includes("cost") || text.includes("save")) return responses.cost;
+          if (text.includes("maintenance")) return responses.maintenance;
+          return responses.help;
+        }
+
+    // Add event listener for Enter key
+    document.getElementById("chatInput")?.addEventListener("keypress", function(e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            sendChatMessage();
+        }
+    });
+  </script>
+
+  {% endblock javascripts %}
+</body>

@@ -1,14 +1,66 @@
-# STARTHACK
+# 🚀 Instructions to Run the Project
 
-Instructions to run
-1. Open terminal
-2. Navigate with CD to the folder where the zip file is located
-3. Start a venv with "python -m venv venv"
-4. paste "venv\Scripts\activate"
-5. run "pip install -r requirements.txt"
-6. Install requirements
-7. Paste "python manage.py migrate"
-8. Paste "python /apps/home/seed.py"
-9. Paste "python manage.py runserver"
-10. Explore!
-11. When you are done, run "deactivate" in your bash.
+Follow these steps to get the project up and running:
+
+1. **Open your terminal**
+
+2. **Navigate to the project folder**  
+   Use the `cd` command to go to the folder where the `.zip` was extracted:
+
+   ```bash
+   cd path/to/your/project
+   ```
+
+3. **Create a virtual environment**
+
+   ```bash
+   python -m venv venv
+   ```
+
+4. **Activate the virtual environment**
+
+   ```bash
+   venv\Scripts\activate
+   ```
+
+5. **Install dependencies**
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+6. **Apply database migrations**
+
+   ```bash
+   python manage.py migrate
+   ```
+
+7. **Seed the database with initial data**
+
+   ```bash
+   python apps/home/seed.py
+   ```
+
+8. **Run the development server**
+
+   ```bash
+   python manage.py runserver
+   ```
+
+9. **Explore the app in your browser!**  
+   Open [http://127.0.0.1:8000](http://127.0.0.1:8000) in your browser.
+
+10. **When you're done, deactivate the virtual environment**
+    ```bash
+    deactivate
+    ```
+
+---
+
+✅ You're all set! Let the exploration begin!
+
+- Click on 'get early access'
+- Click on 'login'
+- wait.
+- Enjoy the analytics! remove, or add them to your preference, budget, and aesthetics.
+- When graph or price does not update, reloading the window is enough!

@@ -1,0 +1,57 @@
+<div class="sidebar">
+  <!--
+          Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red"
+      -->
+  <div class="sidebar-wrapper">
+    <div class="logo">
+      <a class="simple-text logo-normal"> Super_awesome_company </a>
+    </div>
+    <ul class="nav">
+      <li class="{% if 'index' in segment %} active {% endif %}" style="font-size: 0.8rem;">
+        <div class="text-center">
+          <p><strong>System widget fee</strong></p>
+        </div>
+        <div>
+            <h4 class="text-center"><strong>{{ fee|default:"0.00" }} CHF/monthly</strong></h4>
+        </div>
+
+        <div class="text-center">
+          <p><strong>Cumulative saved</strong></p>
+        </div>
+        <div>
+          <h4 class="text-center" style="color:#355749;"><strong>+0.00 CHF/monthly</strong></h4>
+        </div>
+      </li>
+      <li class="{% if 'icons' in segment %} active {% endif %}">
+        <a href="/icons.html">
+          <i class="tim-icons icon-atom"></i>
+          <p>Belimo's widgets</p>
+        </a>
+      </li>
+      <li class="{% if 'notifications' in segment %} active {% endif %}">
+        <a href="/notifications.html">
+          <i class="tim-icons icon-bell-55"></i>
+          <p>Rank Notifications</p>
+        </a>
+      </li>
+      <li class="{% if 'user' in segment %} active {% endif %}">
+        <a href="/user.html">
+          <i class="tim-icons icon-single-02"></i>
+          <p>Profile management</p>
+        </a>
+      </li>
+      <li class="{% if 'tables' in segment %} active {% endif %}">
+        <a href="/tables.html">
+          <i class="tim-icons icon-puzzle-10"></i>
+          <p>User-specific setups</p>
+        </a>
+      </li>
+      <li class="{% if 'typography' in segment %} active {% endif %}">
+        <a href="/typography.html">
+          <i class="tim-icons icon-align-center"></i>
+          <p>Subscriptions & Billing</p>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
