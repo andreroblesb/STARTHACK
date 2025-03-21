@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from apps.home.models import Widget, User  # Changed imports to match updated models
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.db import transaction
+from decimal import Decimal
 import json
 
 def landing_page(request):
@@ -60,32 +62,46 @@ def home(request):
     active_count = sum(1 for widget in context['widgets'].values() if widget['active'])
     print(f"Number of active widgets: {active_count}")
     
+    # retrieve fee acumulated
+    try:
+        user = User.objects.first()
+        if user:
+            context['fee'] = float(user.widget_fee)
+    except User.DoesNotExist:
+        context['fee'] = 0
+    
     return render(request, 'home/index.html', context)
 
 def register(request):
     return render(request, 'home/register.html')  # Rendering the register page from 'home/templates/home/'
 
 @csrf_exempt  # ⚠️ Use CSRF token instead if possible
+@transaction.atomic
 def remove_widget(request):
     try:
         data = json.loads(request.body)
         widget_id = data.get("widget_id")
-        print("WTF", widget_id)
 
-        if not widget_id:
-            return JsonResponse({"success": False, "error": "No widget_id provided"}, status=400)
+        widget = Widget.objects.select_for_update().filter(source_id=widget_id).first()
+        user = User.objects.select_for_update().first()
 
-        widget = Widget.objects.filter(source_id=widget_id).first()
+        if widget and user:
+            if widget.active:  # Only update if widget is currently active
+                widget.active = False
+                widget.save()
+                
+                # Update fee using Decimal
+                user.widget_fee = user.widget_fee - Decimal(str(widget.cost))
+                user.save()
 
-        if not widget:
-            return JsonResponse({"success": False, "error": "Widget not found"}, status=404)
-
-        # ✅ Deactivate the widget instead of deleting it
-        widget.active = False
-        widget.save()
-
-        return JsonResponse({"success": True, "message": f"Widget {widget_id} removed."})
-    
+            return JsonResponse({
+                "success": True,
+                "message": f"Widget {widget_id} removed.",
+                "new_fee": float(user.widget_fee),
+                "widget_id": widget_id
+            })
+        else:
+            return JsonResponse({"success": False, "error": "Widget or user not found."}, status=404)
     except json.JSONDecodeError:
         return JsonResponse({"success": False, "error": "Invalid JSON"}, status=400)
     
@@ -93,22 +109,31 @@ def remove_widget(request):
         return JsonResponse({"success": False, "error": str(e)}, status=500)
 
 @csrf_exempt
+@transaction.atomic
 def add_widget(request):
     try:
-        data = json.loads(request.body)  # Parse JSON from AJAX request
+        data = json.loads(request.body)
         widget_id = data.get("widget_id")
 
-        # Modify this based on your actual model name
-        from .models import Widget  # ✅ Import your model
+        widget = Widget.objects.select_for_update().filter(source_id=widget_id).first()
+        user = User.objects.select_for_update().first()
 
-        widget = Widget.objects.filter(source_id=widget_id).first()
+        if widget and user:
+            if not widget.active:  # Only update if widget isn't already active
+                widget.active = True
+                widget.save()
+                
+                # Update fee using Decimal
+                user.widget_fee = user.widget_fee + Decimal(str(widget.cost))
+                user.save()
 
-        if widget:
-            widget.active = True  # ✅ Activate the widget
-            widget.save()
-
-            return JsonResponse({"success": True, "message": f"Widget {widget_id} added."})
+            return JsonResponse({
+                "success": True,
+                "message": f"Widget {widget_id} added.",
+                "new_fee": float(user.widget_fee),
+                "widget_id": widget_id
+            })
         else:
-            return JsonResponse({"success": False, "error": "Widget not found."}, status=404)
+            return JsonResponse({"success": False, "error": "Widget or user not found."}, status=404)
     except Exception as e:
         return JsonResponse({"success": False, "error": str(e)}, status=500)
