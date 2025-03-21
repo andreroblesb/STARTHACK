@@ -21,27 +21,27 @@ def create_widgets():
     widgets = [
         {
             'name': 'sustainability_score',
-            'cost': Decimal('200.00'),
+            'cost': Decimal('220.80'),
             'source_id': 'sustainability_score',
             'active': True,  # Changed from active_by_default to active
             'position_x': 0,
-            'position_y': 0,
-            'width': 8,
-            'height': 5
-        },
-        {
-            'name': 'top_k_inefficient_devices',
-            'cost': Decimal('200.00'),
-            'source_id': 'top_k_inefficient_devices',
-            'active': True,  # Changed from active_by_default to active
-            'position_x': 8,
             'position_y': 0,
             'width': 4,
             'height': 5
         },
         {
+            'name': 'top_k_inefficient_devices',
+            'cost': Decimal('127.00'),
+            'source_id': 'top_k_inefficient_devices',
+            'active': True,  # Changed from active_by_default to active
+            'position_x': 8,
+            'position_y': 0,
+            'width': 8,
+            'height': 5
+        },
+        {
             'name': 'energy_per_block_day',
-            'cost': Decimal('200.00'),
+            'cost': Decimal('12.00'),
             'source_id': 'energy_per_block_day',
             'active': True,  # Changed from active_by_default to active
             'position_x': 0,
@@ -51,7 +51,7 @@ def create_widgets():
         },
         {
             'name': 'energy_sight',
-            'cost': Decimal('200.00'),
+            'cost': Decimal('24.00'),
             'source_id': 'energy_sight',
             'active': True,  # Changed from active_by_default to active
             'position_x': 4,
@@ -61,7 +61,7 @@ def create_widgets():
         },
         {
             'name': 'mantainance_devices',
-            'cost': Decimal('200.00'),
+            'cost': Decimal('80.00'),
             'source_id': 'maintenance_devices',
             'active': True,  # Changed from active_by_default to active
             'position_x': 8,
@@ -71,7 +71,7 @@ def create_widgets():
         },
         {
             'name': 'amortization_devices',
-            'cost': Decimal('200.00'),
+            'cost': Decimal('97.00'),
             'source_id': 'amortization_devices',
             'active': True,  # Changed from active_by_default to active
             'position_x': 0,
@@ -81,7 +81,7 @@ def create_widgets():
         },
         {
             'name': 'efficiency_devices',
-            'cost': Decimal('200.00'),
+            'cost': Decimal('126.00'),
             'source_id': 'efficiency_devices',
             'active': True,  # Changed from active_by_default to active
             'position_x': 4,
@@ -91,12 +91,32 @@ def create_widgets():
         },
         {
             'name': 'chatbot_advisor',
-            'cost': Decimal('200.00'),
+            'cost': Decimal('347.00'),
             'source_id': 'chatbot_advisor',
             'active': True,  # Changed from active_by_default to active
             'position_x': 8,
             'position_y': 10,
             'width': 8,
+            'height': 5
+        },
+        {
+            'name': '3_dimensional_optimization',
+            'cost': Decimal('0.00'),
+            'source_id': '3_dimensional_optimization',
+            'active': True,  # Changed from active_by_default to active
+            'position_x': 8,
+            'position_y': 10,
+            'width': 4,
+            'height': 5
+        },
+        {
+            'name': 'actual_amortization',
+            'cost': Decimal('0.00'),
+            'source_id': 'actual_amortization',
+            'active': True,  # Changed from active_by_default to active
+            'position_x': 8,
+            'position_y': 10,
+            'width': 4,
             'height': 5
         }
     ]

@@ -90,7 +90,6 @@ def home(request):
         context["top_sustainable_devices"] = top_devices
         
         # get eficiency
-        labels, scores = eficiency_metrics(df)
         top_failure_devices = {
         "labels": json.dumps(labels.tolist()),
         "scores": json.dumps(scores.tolist())
@@ -98,20 +97,37 @@ def home(request):
         
         context["top_failure_devices"] = top_failure_devices
         
-        
-        # get efficiency
+        # Remove duplicate call to efficiency_metrics
         labels, actual_scores, predicted_scores, mae, mse, r2 = eficiency_metrics(df)
+        
+        # Debug print
+        print("Efficiency Data:")
+        print(f"Labels count: {labels}")
+        print(f"Actual scores count: {len(actual_scores)}")
+        print(f"Predicted scores count: {len(predicted_scores)}")
+        
+        # Format the data properly
         context["efficiency_data"] = {
-            "labels": json.dumps([d.strftime("%Y-%m-%d %H:%M") for d in labels]),
-            "actual_scores": json.dumps([float(x) for x in actual_scores]),
-            "predicted_scores": json.dumps([float(x) for x in predicted_scores]),
-            "mae": float(mae) if mae else None,
-            "mse": float(mse) if mse else None,
-            "r2": float(r2) if r2 else None
+            "labels": labels[:100],  # Limit data points
+            "actual_scores": actual_scores[:100],
+            "predicted_scores": predicted_scores[:100]
         }
         
+        # Debug print
+        print("Efficiency data prepared:", len(context["efficiency_data"]["labels"]))
+        
+        # get inneficient devices
+        inefficient_labels, inefficient_scores = inefficient_devices(df)
+        context["inefficient_devices"] = {
+            "labels": inefficient_labels,  # No need for JSON dumps
+            "scores": inefficient_scores   # No need for JSON dumps
+        }
+        
+        print("Inefficient devices context:", context["inefficient_devices"])  # Debug print
         return render(request, 'home/index.html', context)
+        
     except Exception as e:
+        print("Error in home view:", str(e))  # Debug print
         context['error'] = str(e)
         return render(request, 'home/index.html', context)
 
@@ -288,7 +304,7 @@ def eficiency_metrics(df):
     df["Smoothed_Predicted_Efficiency"] = df["Predicted_Efficiency"].rolling(window=50, min_periods=1).mean()
 
     # *Reduce Points for Better Visualization*
-    df_sample = df.iloc[::100, :]
+    df_sample = df.iloc[::50, :]  # Changed from 100 to 50 for more data points
 
     # *Evaluate Model Performance*
     # Use new test split for evaluation only if model was just trained
@@ -299,12 +315,41 @@ def eficiency_metrics(df):
     else:
         mae = mse = r2 = None  # or load from file if you stored them
 
-    print(df_sample["sample_time"])
-    print(df_sample["Smoothed_Actual_Efficiency"])
-    print(df_sample["Smoothed_Predicted_Efficiency"])
-    return (
-        df_sample["sample_time"],
-        df_sample["Smoothed_Actual_Efficiency"],
-        df_sample["Smoothed_Predicted_Efficiency"],
-        mae, mse, r2
-    )
+    # Simplify data format
+    try:
+        # Sample and format data
+        df_sample = df.iloc[::100, :].copy()  # Take every 100th row
+        
+        # Generate simple labels and values
+        labels = [t.strftime('%H:%M') for t in df_sample['sample_time']]
+        actual = [round(float(x), 2) for x in df_sample['Smoothed_Actual_Efficiency'] if pd.notnull(x)]
+        predicted = [round(float(x), 2) for x in df_sample['Smoothed_Predicted_Efficiency'] if pd.notnull(x)]
+        
+        print("Data points:", len(labels), len(actual), len(predicted))  # Debug info
+        
+        return labels, actual, predicted, mae, mse, r2
+    except Exception as e:
+        print("Error in efficiency_metrics:", str(e))
+        return [], [], [], None, None, None
+
+
+def inefficient_devices(df):
+    try:
+        # Calculate inefficiency score
+        df["inefficiency_score"] = (df["AbsPower_Fb_W"] * df["OperatingHours"]) / df["Flow_Volume_total_m3"]
+        
+        # Group by device and get mean inefficiency
+        device_stats = df.groupby("device_id")["inefficiency_score"].mean().sort_values(ascending=False)
+        
+        # Get top 5 inefficient devices
+        top_devices = device_stats.head(5)
+        
+        # Convert to simple lists
+        labels = [f"Device {x}" for x in top_devices.index.astype(str)]
+        scores = [round(float(x), 2) for x in top_devices.values]
+        
+        print("Inefficient devices data:", labels, scores)  # Debug print
+        return labels, scores
+    except Exception as e:
+        print("Error in inefficient_devices:", str(e))
+        return ["No Data"] * 5, [0] * 5
