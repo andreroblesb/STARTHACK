@@ -2,6 +2,10 @@
 __pycache__/
 *.py[cod]
 
+apps/home/data/ev3_device_data_100000.csv
+
+starthack/saved_models/*
+
 # tests and coverage
 *.pytest_cache
 .coverage
